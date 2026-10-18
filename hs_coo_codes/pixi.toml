@@ -12,6 +12,7 @@ classify = "python -m hs_coo_codes"
 
 [dependencies]
 python = "3.12.*"
+click = ">=8.5.0,<9"
 
 [pypi-dependencies]
 hs-coo-codes = { path = ".", editable = true }

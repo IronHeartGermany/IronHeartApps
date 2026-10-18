@@ -2,6 +2,6 @@
 Support calling package as a module.
 '''
 
-from .hs_coo_codes import main
+from .hs_coo_codes import cli
 
-main()
+cli.main()
