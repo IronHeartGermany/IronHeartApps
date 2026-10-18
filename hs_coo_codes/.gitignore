@@ -1,0 +1,7 @@
+# pixi environments
+.pixi/*
+!.pixi/config.toml
+
+*.pyc
+**/__pycache__/
+src/hs_coo_codes.egg-info/*
