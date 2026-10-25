@@ -50,7 +50,7 @@ def validate_row(row_number: int, row: list[str], check_hs: bool, check_coo: boo
             logging.error("(Row %d Column %s) has value %s but was expected to be empty",
                           row_number, title, row[column.value])
             return False
-        if not row[column.value] and field_required == Field.REQUIRED:
+        if not row[column.value].strip() and field_required == Field.REQUIRED:
             logging.error("(Row %d Column %s) does not have a value but is expected to have one",
                           row_number, title)
             return False

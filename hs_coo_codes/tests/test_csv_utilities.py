@@ -46,6 +46,14 @@ def test_missing_hs_code():
         row = next(reader)
         assert not csv_utilities.validate_row(2, row, True, False)
 
+def test_space_as_hs_code():
+    """ Test that a space as HS Code returns false when not ignored """
+    with open("data/test/space_hs_code.csv", 'r', encoding='utf-8') as f:
+        reader = csv.reader(f)
+        next(reader)
+        row = next(reader)
+        assert not csv_utilities.validate_row(2, row, True, False)
+
 def test_missing_coo():
     """ Test that missing COO returns false when not ignored """
     with open("data/test/missing_coo.csv", 'r', encoding='utf-8') as f:
@@ -53,6 +61,30 @@ def test_missing_coo():
         next(reader)
         row = next(reader)
         assert not csv_utilities.validate_row(2, row, False, True)
+
+def test_field_not_empty():
+    """ Test a field that should be empty but is not returns false """
+    with open("data/test/field_should_be_empty.csv", 'r', encoding='utf-8') as f:
+        reader = csv.reader(f)
+        next(reader)
+        row = next(reader)
+        assert not csv_utilities.validate_row(2, row, False, False)
+
+def test_missing_hs_code_ignored():
+    """ Test that missing HS Codes returns true when ignored """
+    with open("data/test/missing_hs_code.csv", 'r', encoding='utf-8') as f:
+        reader = csv.reader(f)
+        next(reader)
+        row = next(reader)
+        assert csv_utilities.validate_row(2, row, False, False)
+
+def test_missing_coo_ignored():
+    """ Test that missing COO returns true when ignored """
+    with open("data/test/missing_coo.csv", 'r', encoding='utf-8') as f:
+        reader = csv.reader(f)
+        next(reader)
+        row = next(reader)
+        assert csv_utilities.validate_row(2, row, False, False)
 
 def test_valid_csv():
     """ Test that a valid CSV returns True """

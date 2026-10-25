@@ -373,4 +373,6 @@ packages:
   timestamp: 1787272852357
 - pypi: ./
   name: hs-coo-codes
+  requires_dist:
+  - click>=8.5.0,<9
   requires_python: '>=3.12'

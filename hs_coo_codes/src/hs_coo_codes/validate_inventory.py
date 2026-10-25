@@ -7,6 +7,7 @@ and without expecting the HS and COO codes.
 
 import csv
 import logging
+import sys
 
 import click
 
@@ -27,6 +28,7 @@ def cli(input_file, check_hs, check_coo):
         logging.info("Validation successful")
     else:
         logging.error("Validation failed")
+        sys.exit(1)
 
 
 def validate_inventory(input_file: str, check_hs: bool, check_coo: bool) -> bool:

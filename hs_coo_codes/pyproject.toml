@@ -7,6 +7,10 @@ name = "hs-coo-codes"
 version = "0.1.0"
 requires-python = ">=3.12"
 
+dependencies = [
+    "click>=8.5.0,<9",
+]
+
 [tool.setuptools]
 package-dir = {"" = "src"}
 

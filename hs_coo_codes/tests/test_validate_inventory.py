@@ -28,9 +28,25 @@ def test_missing_hs_code():
     """ Test that missing HS Codes returns false when not ignored """
     assert not validate_inventory.validate_inventory("data/test/missing_hs_code.csv", True, False)
 
+def test_missing_hs_code_ignored():
+    """ Test that missing HS Codes returns true when ignored """
+    assert validate_inventory.validate_inventory("data/test/missing_hs_code.csv", False, False)
+
+def test_space_as_hs_code():
+    """ Test that a space as HS Code returns false when not ignored """
+    assert not validate_inventory.validate_inventory("data/test/space_hs_code.csv", True, False)
+
 def test_missing_coo():
     """ Test that missing COO returns false when not ignored """
     assert not validate_inventory.validate_inventory("data/test/missing_coo.csv", False, True)
+
+def test_missing_coo_ignored():
+    """ Test that missing COO returns true when ignored """
+    assert validate_inventory.validate_inventory("data/test/missing_coo.csv", False, False)
+
+def test_field_not_empty():
+    """ Test a field that should be empty but is not returns false """
+    assert not validate_inventory.validate_inventory("data/test/field_should_be_empty.csv", False, False)
 
 def test_valid_csv():
     """ Test that a valid CSV returns True """
