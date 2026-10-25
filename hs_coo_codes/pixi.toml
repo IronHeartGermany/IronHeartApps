@@ -6,7 +6,7 @@ platforms = ["osx-arm64"]
 version = "0.1.0"
 
 [tasks]
-test = "pytest"
+test = "python -m pytest"
 lint = "ruff check ."
 create-codes = "python -m hs_coo_codes.create_codes"
 validate-inventory = "python -m hs_coo_codes.validate_inventory"
@@ -14,6 +14,7 @@ validate-inventory = "python -m hs_coo_codes.validate_inventory"
 [dependencies]
 python = "3.12.*"
 click = ">=8.5.0,<9"
+pytest = ">=8,<10"
 
 [pypi-dependencies]
 hs-coo-codes = { path = ".", editable = true }

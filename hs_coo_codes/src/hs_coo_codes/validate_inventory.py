@@ -7,7 +7,6 @@ and without expecting the HS and COO codes.
 
 import csv
 import logging
-import sys
 
 import click
 
@@ -30,11 +29,12 @@ def cli(input_file, check_hs, check_coo):
         logging.error("Validation failed")
 
 
-def validate_inventory(input_file, check_hs, check_coo) -> bool:
+def validate_inventory(input_file: str, check_hs: bool, check_coo: bool) -> bool:
     """ Validate the inventory CSV """
     with open(input_file, 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
 
+        # Get header.  An exception indicates it's empty.
         try:
             header = next(reader)
         except StopIteration as e:
