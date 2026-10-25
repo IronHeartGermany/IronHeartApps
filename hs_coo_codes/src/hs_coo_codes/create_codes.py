@@ -14,6 +14,8 @@ import click
 def cli(input_file):
     ''' Main function '''
 
+    print("----> ")
+
     with open(input_file, 'r', encoding='utf-8') as f:
         content = f.read()
         print(content)

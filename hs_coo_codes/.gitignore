@@ -5,3 +5,5 @@
 *.pyc
 **/__pycache__/
 src/hs_coo_codes.egg-info/*
+*.csv
+*.zip
