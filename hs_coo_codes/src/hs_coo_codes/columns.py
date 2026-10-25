@@ -39,7 +39,7 @@ class Field(Enum):
 
 # Map header column index to a tuple containing the
 # field name and if it's a required field
-header_map : dict[int, (str, bool)] = {
+header_map: dict[int, tuple[str, Field]] = {
     InventoryColumns.HANDLE: ("Handle", Field.REQUIRED),
     InventoryColumns.TITLE: ("Title", Field.REQUIRED),
     InventoryColumns.OPTION1_NAME: ("Option1 Name", Field.REQUIRED),
