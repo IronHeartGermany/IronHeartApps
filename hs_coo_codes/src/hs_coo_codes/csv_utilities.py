@@ -4,7 +4,15 @@ Utilities for CSV files
 
 import logging
 
+from .codes import (COOCodes,
+                    COO_CODES_CHINA,
+                    COO_CODES_GERMANY,
+                    COO_CODES_GREAT_BRITAIN,
+                    COO_CODES_JAPAN,
+                    COO_CODES_SINGAPORE,
+                    COO_CODES_USA)
 from .columns import header_map, InventoryColumns, Field
+from .sku import StartSKU
 
 
 def validate_header(header: list[str]) -> bool:
@@ -55,3 +63,47 @@ def validate_row(row_number: int, row: list[str], check_hs: bool, check_coo: boo
                           row_number, title)
             return False
     return True
+
+
+def create_row_with_codes(row_number: int, row: list[str]) -> list[str] | None:
+    """Given a row, create a new row with HS and COO codes"""
+    new_row = row[:]
+
+    sku = row[InventoryColumns.SKU.value]
+
+    # Handle products without an SKU
+    if not sku:
+        hs_code = "AAA"
+        coo_code = "BB"
+    else:
+        hs_code = "AAA"
+        coo_code = get_coo_from_sku(sku.split("-", 1)[0])
+
+    if hs_code is None:
+        logging.error("Generated HS Code of None for row %d", row_number)
+        return None
+    if coo_code is None:
+        logging.error("Generated COO Code of None for row %d", row_number)
+        return None
+
+    return new_row
+
+def get_coo_from_sku(sku: str) -> str | None:
+    """Get the COO from the SKU"""
+    if sku in COO_CODES_CHINA:
+        coo = COOCodes.CHINA
+    elif sku in COO_CODES_GERMANY:
+        coo = COOCodes.GERMANY
+    elif sku in COO_CODES_GREAT_BRITAIN:
+        coo = COOCodes.GREAT_BRITAIN
+    elif sku in COO_CODES_JAPAN:
+        coo = COOCodes.JAPAN
+    elif sku in COO_CODES_SINGAPORE:
+        coo = COOCodes.SINGAPORE
+    elif sku in COO_CODES_USA:
+        coo = COOCodes.USA
+    else:
+        logging.error("Could not map SKU-Start '%s' to COO", sku)
+        coo = None
+
+    return coo
