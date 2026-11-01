@@ -4,6 +4,7 @@ Test the validation of the CSV utilities.
 
 import csv
 
+from hs_coo_codes import codes
 from hs_coo_codes import csv_utilities
 
 
@@ -93,3 +94,26 @@ def test_valid_csv():
         next(reader)
         row = next(reader)
         assert csv_utilities.validate_row(2, row, True, True)
+
+def test_get_coo_codes_from_sku():
+    """ Test getting the COO codes from the start of the SKUs """
+    for sku_start in codes.COO_CODES_CHINA:
+        assert csv_utilities.get_coo_from_sku(sku_start) == codes.COOCodes.CHINA
+    for sku_start in codes.COO_CODES_GERMANY:
+        assert csv_utilities.get_coo_from_sku(sku_start) == codes.COOCodes.GERMANY
+    for sku_start in codes.COO_CODES_GREAT_BRITAIN:
+        assert csv_utilities.get_coo_from_sku(sku_start) == codes.COOCodes.GREAT_BRITAIN
+    for sku_start in codes.COO_CODES_JAPAN:
+        assert csv_utilities.get_coo_from_sku(sku_start) == codes.COOCodes.JAPAN
+    for sku_start in codes.COO_CODES_SINGAPORE:
+        assert csv_utilities.get_coo_from_sku(sku_start) == codes.COOCodes.SINGAPORE
+    for sku_start in codes.COO_CODES_USA:
+        assert csv_utilities.get_coo_from_sku(sku_start) == codes.COOCodes.USA
+    assert csv_utilities.get_coo_from_sku("INVALID") is None
+
+def test_get_coo_from_title():
+    """ Test getting the COO codes from the title """
+    assert csv_utilities.get_coo_from_title("Rats Monster Skull T-Shirt Black") == codes.COOCodes.JAPAN
+    assert csv_utilities.get_coo_from_title("Trophy - Coke Stripe Pants 11 Oz Black") == codes.COOCodes.JAPAN
+    assert csv_utilities.get_coo_from_title("IRON HEART GESCHENKGUTSCHEIN") == codes.COOCodes.GERMANY
+    assert csv_utilities.get_coo_from_title("IRON HEART GERMANY Gift Card") == codes.COOCodes.GERMANY

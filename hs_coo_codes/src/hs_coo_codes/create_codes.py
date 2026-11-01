@@ -30,7 +30,6 @@ def cli(input_file, output_file):
 
 def create_codes(input_file, output_file) -> bool:
     """Create HS and COO codes based upon info in input CSV"""
-    print("----> ")
     # Validate input file
     if not validate_inventory(input_file, False, False):
         logging.error("Validation of input file %s failed", input_file)
@@ -56,6 +55,11 @@ def create_codes(input_file, output_file) -> bool:
 
     except FileNotFoundError as e:
         logging.error("Input file %s could not be found: %s", input_file, e)
+        return False
+
+    # Validate output file
+    if not validate_inventory(output_file, True, True):
+        logging.error("Validation of output file %s failed", output_file)
         return False
 
     return True

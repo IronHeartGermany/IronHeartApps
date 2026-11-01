@@ -69,13 +69,19 @@ def create_row_with_codes(row_number: int, row: list[str]) -> list[str] | None:
     """Given a row, create a new row with HS and COO codes"""
     new_row = row[:]
 
-    sku = row[InventoryColumns.SKU.value]
+    sku = row[InventoryColumns.SKU]
 
-    # Handle products without an SKU
     if not sku:
+        # Handle products without an SKU
         hs_code = "AAA"
-        coo_code = "BB"
+
+        title = row[InventoryColumns.TITLE]
+        coo_code = get_coo_from_sku(title.split("-", 1)[0], False)
+        if coo_code is None:
+            coo_code = get_coo_from_title(title.split(" ", 1)[0].strip())
+
     else:
+        # Handle products with an SKU
         hs_code = "AAA"
         coo_code = get_coo_from_sku(sku.split("-", 1)[0])
 
@@ -86,24 +92,38 @@ def create_row_with_codes(row_number: int, row: list[str]) -> list[str] | None:
         logging.error("Generated COO Code of None for row %d", row_number)
         return None
 
+    new_row[InventoryColumns.HS_CODE] = hs_code
+    new_row[InventoryColumns.COO] = coo_code
+
     return new_row
 
-def get_coo_from_sku(sku: str) -> str | None:
+def get_coo_from_sku(sku_start: str, log: str=True) -> str | None:
     """Get the COO from the SKU"""
-    if sku in COO_CODES_CHINA:
-        coo = COOCodes.CHINA
-    elif sku in COO_CODES_GERMANY:
-        coo = COOCodes.GERMANY
-    elif sku in COO_CODES_GREAT_BRITAIN:
-        coo = COOCodes.GREAT_BRITAIN
-    elif sku in COO_CODES_JAPAN:
-        coo = COOCodes.JAPAN
-    elif sku in COO_CODES_SINGAPORE:
-        coo = COOCodes.SINGAPORE
-    elif sku in COO_CODES_USA:
-        coo = COOCodes.USA
-    else:
-        logging.error("Could not map SKU-Start '%s' to COO", sku)
-        coo = None
+    if sku_start in COO_CODES_CHINA:
+        return COOCodes.CHINA
+    if sku_start in COO_CODES_GERMANY:
+        return COOCodes.GERMANY
+    if sku_start in COO_CODES_GREAT_BRITAIN:
+        return COOCodes.GREAT_BRITAIN
+    if sku_start in COO_CODES_JAPAN:
+        return COOCodes.JAPAN
+    if sku_start in COO_CODES_SINGAPORE:
+        return COOCodes.SINGAPORE
+    if sku_start in COO_CODES_USA:
+        return COOCodes.USA
 
-    return coo
+    if log:
+        logging.error("Could not map SKU-Start '%s' to COO", sku_start)
+    return None
+
+def get_coo_from_title(title: str) -> str | None:
+    """Get the COO from the Title"""
+    title_start = title.split(" ", 1)[0].strip()
+    if title_start in ("Rats", "Trophy"):
+        return COOCodes.JAPAN
+
+    if "Union Special" in title or "GERMANY" in title or "GESCHENKGUTSCHEIN" in title:
+        return COOCodes.GERMANY
+
+    logging.error("Could not map title '%s' to COO", title)
+    return None
