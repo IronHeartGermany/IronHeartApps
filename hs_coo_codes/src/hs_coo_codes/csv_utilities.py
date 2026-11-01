@@ -100,21 +100,22 @@ def create_row_with_codes(row_number: int, row: list[str]) -> list[str] | None:
 def get_coo_from_sku(sku_start: str, log: str=True) -> str | None:
     """Get the COO from the SKU"""
     if sku_start in COO_CODES_CHINA:
-        return COOCodes.CHINA
-    if sku_start in COO_CODES_GERMANY:
-        return COOCodes.GERMANY
-    if sku_start in COO_CODES_GREAT_BRITAIN:
-        return COOCodes.GREAT_BRITAIN
-    if sku_start in COO_CODES_JAPAN:
-        return COOCodes.JAPAN
-    if sku_start in COO_CODES_SINGAPORE:
-        return COOCodes.SINGAPORE
-    if sku_start in COO_CODES_USA:
-        return COOCodes.USA
-
-    if log:
-        logging.error("Could not map SKU-Start '%s' to COO", sku_start)
-    return None
+        coo = COOCodes.CHINA
+    elif sku_start in COO_CODES_GERMANY:
+        coo = COOCodes.GERMANY
+    elif sku_start in COO_CODES_GREAT_BRITAIN:
+        coo =  COOCodes.GREAT_BRITAIN
+    elif sku_start in COO_CODES_JAPAN:
+        coo = COOCodes.JAPAN
+    elif sku_start in COO_CODES_SINGAPORE:
+        coo = COOCodes.SINGAPORE
+    elif sku_start in COO_CODES_USA:
+        coo = COOCodes.USA
+    else:
+        if log:
+            logging.error("Could not map SKU-Start '%s' to COO", sku_start)
+        coo = None
+    return coo
 
 def get_coo_from_title(title: str) -> str | None:
     """Get the COO from the Title"""
