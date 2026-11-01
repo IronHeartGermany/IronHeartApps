@@ -113,7 +113,36 @@ def test_get_coo_codes_from_sku():
 
 def test_get_coo_from_title():
     """ Test getting the COO codes from the title """
-    assert csv_utilities.get_coo_from_title("Rats Monster Skull T-Shirt Black") == codes.COOCodes.JAPAN
-    assert csv_utilities.get_coo_from_title("Trophy - Coke Stripe Pants 11 Oz Black") == codes.COOCodes.JAPAN
-    assert csv_utilities.get_coo_from_title("IRON HEART GESCHENKGUTSCHEIN") == codes.COOCodes.GERMANY
-    assert csv_utilities.get_coo_from_title("IRON HEART GERMANY Gift Card") == codes.COOCodes.GERMANY
+    assert (csv_utilities.get_coo_from_title("Rats Monster Skull T-Shirt Black") ==
+            codes.COOCodes.JAPAN)
+    assert (csv_utilities.get_coo_from_title("Trophy - Coke Stripe Pants 11 Oz Black") ==
+            codes.COOCodes.JAPAN)
+    assert csv_utilities.get_coo_from_title("Invalid Title") is None
+
+def test_create_row_with_codes():
+    """ Test creating a row in the CSV with the codes """
+
+    input_row = ['iron-heart-ih-666s-21-21oz-selvedge-denim-slim-straight-cut-jeans-indigo',
+                 'IH-666S-21 - 21oz Selvedge Denim Slim Straight Cut Jeans - Indigo', 'Size',
+                 '35', '', '', '', '', 'IH-666S-21', '', '', 'Hamburg Store IH Germany',
+                 '', '0', '0', '0', '0', '0', '', '', '', '', ''
+                 ]
+
+    output_row = csv_utilities.create_row_with_codes(2, input_row)
+    assert output_row is not None
+    assert output_row[csv_utilities.InventoryColumns.HS_CODE] == "AAA"
+    assert output_row[csv_utilities.InventoryColumns.COO] == csv_utilities.COOCodes.JAPAN.value
+
+def test_create_row_with_codes_no_sku():
+    """ Test creating a row in the CSV with the codes when there is no SKU """
+
+    input_row = ['trophy-15th-anniversary-1605-jeans-standard-dirt-denim-14-5-oz',
+                 'Trophy - 15th Anniversary 1605 Jeans 14,5 Oz Standard Dirt Denim',
+                 'Size', '38', '', '', '', '', '', '', '',
+                 'Kunden Reservierung Lager', '', '0', '0', '0', '0', '0', '', '',
+                 '', '', '']
+
+    output_row = csv_utilities.create_row_with_codes(2, input_row)
+    assert output_row is not None
+    assert output_row[csv_utilities.InventoryColumns.HS_CODE] == "AAA"
+    assert output_row[csv_utilities.InventoryColumns.COO] == csv_utilities.COOCodes.JAPAN.value

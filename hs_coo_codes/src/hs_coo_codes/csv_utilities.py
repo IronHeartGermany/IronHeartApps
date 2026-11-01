@@ -12,8 +12,6 @@ from .codes import (COOCodes,
                     COO_CODES_SINGAPORE,
                     COO_CODES_USA)
 from .columns import header_map, InventoryColumns, Field
-from .sku import StartSKU
-
 
 def validate_header(header: list[str]) -> bool:
     """ Validate the header in the CSV file """
@@ -79,7 +77,6 @@ def create_row_with_codes(row_number: int, row: list[str]) -> list[str] | None:
         coo_code = get_coo_from_sku(title.split("-", 1)[0], False)
         if coo_code is None:
             coo_code = get_coo_from_title(title.split(" ", 1)[0].strip())
-
     else:
         # Handle products with an SKU
         hs_code = "AAA"
@@ -97,20 +94,20 @@ def create_row_with_codes(row_number: int, row: list[str]) -> list[str] | None:
 
     return new_row
 
-def get_coo_from_sku(sku_start: str, log: str=True) -> str | None:
+def get_coo_from_sku(sku_start: str, log: bool=True) -> str | None:
     """Get the COO from the SKU"""
     if sku_start in COO_CODES_CHINA:
-        coo = COOCodes.CHINA
+        coo = COOCodes.CHINA.value
     elif sku_start in COO_CODES_GERMANY:
-        coo = COOCodes.GERMANY
+        coo = COOCodes.GERMANY.value
     elif sku_start in COO_CODES_GREAT_BRITAIN:
-        coo =  COOCodes.GREAT_BRITAIN
+        coo =  COOCodes.GREAT_BRITAIN.value
     elif sku_start in COO_CODES_JAPAN:
-        coo = COOCodes.JAPAN
+        coo = COOCodes.JAPAN.value
     elif sku_start in COO_CODES_SINGAPORE:
-        coo = COOCodes.SINGAPORE
+        coo = COOCodes.SINGAPORE.value
     elif sku_start in COO_CODES_USA:
-        coo = COOCodes.USA
+        coo = COOCodes.USA.value
     else:
         if log:
             logging.error("Could not map SKU-Start '%s' to COO", sku_start)
@@ -122,9 +119,6 @@ def get_coo_from_title(title: str) -> str | None:
     title_start = title.split(" ", 1)[0].strip()
     if title_start in ("Rats", "Trophy"):
         return COOCodes.JAPAN
-
-    if "Union Special" in title or "GERMANY" in title or "GESCHENKGUTSCHEIN" in title:
-        return COOCodes.GERMANY
 
     logging.error("Could not map title '%s' to COO", title)
     return None
