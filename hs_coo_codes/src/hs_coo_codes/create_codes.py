@@ -17,6 +17,7 @@ import tempfile
 import click
 
 from .validate_inventory import validate_inventory
+from .compare_inventory import compare_inventory
 from . import csv_utilities
 
 @click.command()
@@ -81,13 +82,19 @@ def create_codes(input_file, output_file) -> bool:
             logging.error("Validation of output file %s failed", temporary_path)
             return False
 
+        # Compare input and output files
+        if not compare_inventory(input_file, temporary_path):
+            logging.error("Comparison of input file (%s) and output file (%s) failed",
+                          input_file, output_file)
+            return False
+
         # Move the temporary file to the output file
         os.replace(temporary_path, output_path)
 
         return True
 
-    except (OSError, csv.Error, StopIteration, FileNotFoundError) as error:
-        logging.error("Code creation failed: %s", error)
+    except (OSError, csv.Error, StopIteration, FileNotFoundError) as e:
+        logging.error("Code creation failed: %s", e)
         return False
 
     finally:

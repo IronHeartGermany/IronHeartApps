@@ -34,7 +34,7 @@ def cli(input_file, check_hs, check_coo):
 def validate_inventory(input_file: str, check_hs: bool, check_coo: bool) -> bool:
     """ Validate the inventory CSV """
     try:
-        with open(input_file, 'r', encoding='utf-8') as f:
+        with open(input_file, 'r', encoding='utf-8', newline="") as f:
             reader = csv.reader(f)
 
             # Get header.  An exception indicates it's empty.
@@ -50,9 +50,8 @@ def validate_inventory(input_file: str, check_hs: bool, check_coo: bool) -> bool
                 return False
 
             # Validate rows after header
-            for index, row in enumerate(reader):
-                row_number = index + 2
-                if not csv_utilities.validate_row(row_number, row, check_hs, check_coo):
+            for index, row in enumerate(reader, start=2):
+                if not csv_utilities.validate_row(index, row, check_hs, check_coo):
                     logging.error("Row validation failed")
                     return False
 

@@ -89,6 +89,11 @@ def create_row_with_codes(row_number: int, row: list[str]) -> list[str] | None:
         logging.error("Generated COO Code of None for row %d", row_number)
         return None
 
+    # Check if existing COO code does not match current COO code
+    if row[InventoryColumns.COO] and coo_code != row[InventoryColumns.COO]:
+        logging.warning("COO code %s does not match existing code %s in row %d (SKU=%s)",
+                        coo_code, row[InventoryColumns.COO], row_number, row[InventoryColumns.SKU])
+
     new_row[InventoryColumns.HS_CODE] = hs_code
     new_row[InventoryColumns.COO] = coo_code
 

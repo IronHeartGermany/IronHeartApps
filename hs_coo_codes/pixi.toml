@@ -10,6 +10,7 @@ test = "python -m pytest"
 lint = "ruff check ."
 create-codes = "python -m hs_coo_codes.create_codes"
 validate-inventory = "python -m hs_coo_codes.validate_inventory"
+compare-inventory = "python -m hs_coo_codes.compare_inventory"
 
 [dependencies]
 python = "3.12.*"
