@@ -1,0 +1,42 @@
+Product group,US HTS code,US HTS code (formatted),6-digit HS,General duty,EU code (original list),Notes
+"Jeans, blue denim",6203424511,6203.42.4511,620342,16.6%,6203423100,"Men's cotton trousers, blue denim"
+"Jeans, black/grey denim",6203424518,6203.42.4518,620342,16.6%,6203423100,"Not blue, so 'other' men's cotton trousers"
+"Other trousers (chinos), cotton",6203424518,6203.42.4518,620342,16.6%,62034235,Corduroy: 6203.42.4506
+"Cotton shirt, flannel (napped check)",6205202047,6205.20.2047,620520,19.7%,6205200090,"Two or more colours in the weave, napped. Not corduroy"
+"Cotton shirt, chambray/denim/check (not napped)",6205202051,6205.20.2051,620520,19.7%,6205200090,Two or more colours in warp/weft. Not corduroy
+"Cotton shirt, single colour",6205202067,6205.20.2067,620520,19.7%,6205200090,Not corduroy
+"Cotton shirt, corduroy",6205202036,6205.20.2036,620520,19.7%,6205200090,Any colour. A corduroy overshirt classified as a jacket: 6201.30.8021 (9.4%)
+Wool shirt,6205900710,6205.90.0710,620590,17.5%,6205908090,
+"Cotton jacket, blue denim",6201308031,6201.30.8031,620130,9.4%,6201129090,EU code uses pre-2022 subheading 6201.12
+"Cotton jacket, other",6201308051,6201.30.8051,620130,9.4%,6201129090,Water resistant: 6201.30.7000 (6.2%). Corduroy: 6201.30.8021 (9.4%). Blazer / sport coat: 6203.32
+Wool jacket,6201204011,6201.20.4011,620120,49.7¢/kg + 19.7%,6201110090,Overcoats: 6201.20.1110 (41¢/kg + 16.3%)
+Nylon / polyester jacket,6201407511,6201.40.7511,620140,27.7%,6201930000,Water resistant: 6201.40.7000 (7.1%)
+"Performance outerwear jacket, nylon / polyester",6201404500,6201.40.4500,620140,7.1%,— (not in list),"Recreational performance outerwear (Ch. 62 Add. US Note 3): water resistant or plastic-coated, critically sealed seams, 5+ listed features; keep records. This code also needs the Add. US Note 2 water-resistance test (max 1.0 g water at 600 mm, AATCC 35, from a rubber/plastics application); plastic coating alone is not enough. Fabric coated/laminated per heading 5903/5906/5907: check 6210.40 first (3.3–7.1%). Otherwise: 6201.40.5011 (27.7%). Down: 6201.40.2500 (4.4%) only if, by weight, 10% or more down, or 15% or more down and waterfowl plumage of which down is 35% or more; 'down-filled' alone is not enough"
+"Performance outerwear jacket, cotton",6201304000,6201.30.4000,620130,6.2%,— (not in list),"Same conditions, water-resistance test and 6210.40 check as above. Otherwise: 6201.30.5051 (9.4%). Down: 6201.30.3000 (4.4%), only if the same down thresholds are met"
+"Leather boots, welted, lace-up (incl. heritage 'work' boots)",6403913040,6403.91.3040,640391,5%,6403911100 / 6403919600,"Covers the ankle; outsole of rubber, plastics or composition leather; uppers not pigskin (pigskin: 6403.91.3035). Leather outsole: 6403.51.3030 (5%). Work footwear 6403.91.3010 (5%) only if built for occupational use with hazard protection. US has no 24 cm split"
+"Leather engineer boots, welted (pull-on)",6403913040,6403.91.3040,640391,5%,6403911100 / 6403919600,"Same sole/upper conditions and leather-outsole alternative as above. Slip-on, so never 'work footwear' (Ch. 64 Stat. Note 1(a)). Not welted: 6403.91.6075 (8.5%)"
+Leather jacket,4203104030,4203.10.4030,420310,6%,4203100000,
+Leather shirt,4203104085,4203.10.4085,420310,6%,42031000,
+Cotton T-shirt,6109100012,6109.10.0012,610910,16.5%,6109100010,Plain all-white T-shirt: 6109.10.0004
+Cotton cap (woven),6505002060,6505.00.2060,650500,7.5%,6114200000,EU code 6114 is the wrong heading for hats
+Cotton beanie (knitted),6505001540,6505.00.1540,650500,7.9%,6114200000,EU code 6114 is the wrong heading for hats
+Wool hat (knitted),6505003090,6505.00.3090,650500,25.4¢/kg + 7.7%,6114900010,Not knitted: 6505.00.4090 (31¢/kg + 7.9%). EU code 6114 is the wrong heading for hats
+Cotton socks,6115959000,6115.95.9000,611595,13.5%,6115950000,
+Silver jewellery,7113115000,7113.11.5000,711311,5%,71131100,Valued over $18/dozen. $18/dozen or less: 7113.11.2000 (13.5%). Finished chain jewellery stays here; 7113.11.1000 (6.3%) is only chain in continuous lengths for making jewellery
+Brass jewellery,7117199000,7117.19.9000,711719,11%,71171900,
+"Sneakers, athletic type, textile upper, rubber sole",6404119020,6404.11.9020,640411,20%,640419,"Tennis/gym/training shoes 'and the like', even if sold for casual wear (Ch. 64 Add. US Note 2). Valued over $12/pair. Leather upper: 6403.99"
+"Sneakers, non-athletic (casual), textile upper, rubber sole",6404199030,6404.19.9030,640419,9%,640419,"Lace-up/fastened shoes, or slip-ons with a rubber/plastic foxing(-like) band at the sole overlapping the upper. Valued over $12/pair. Slip-ons without such a band, and open toe/heel: 6404.19.2530 (7.5%, cotton/veg. fibre upper, under 10% rubber/plastics by weight), 6404.19.3040 (12.5%, other textile, under 10%), 6404.19.3940 (37.5%, 10% or more)"
+Cotton sweatshirt / hoodie,6110202041,6110.20.2041,611020,16.5%,61102091,
+Wool knitted jumper,6110110015,6110.11.0015,611011,16%,61101130,Coarse knit (9 or fewer stitches per 2 cm). Fine knit: 6110.11.0070
+Leather belt,4203300000,4203.30.0000,420330,2.7%,42033000,
+Shoecare,3405100000,3405.10.0000,340510,Free,3405100000,
+Leather clothing accessories,4203406000,4203.40.6000,420340,Free,42034000,Non-clothing items (keyrings etc.): 4205.00.8000
+Leather laces,4205002000,4205.00.2000,420500,Free,42050090,
+"Textile shoelaces, cotton",6307905010,6307.90.5010,630790,Free,58042900,Other fibres: 6307.90.5020. EU code 5804 is lace fabric
+Cotton bag (canvas tote / travel),4202921500,4202.92.1500,420292,6.3%,63052000,EU code 6305 is packing sacks
+Polyester / nylon bag,4202923131,4202.92.3131,420292,17.6%,42022290,Backpack: 4202.92.3120. Handbag: 4202.22.8100
+Cotton bandana,6213201000,6213.20.1000,621320,13.2%,62132000,"Hemmed, no lace or embroidery, no side over 60 cm. Larger: 6214.90.0010 (11.3%)"
+China mug,6911104500,6911.10.4500,691110,14%,69111000,"Porcelain, not bone china, not sold as a set"
+"Patch, woven cotton",5807102010,5807.10.2010,580710,3.3%,58071010,"Polyester woven: 5807.10.2020. Embroidered cotton: 5810.91.0020 (not over 200 g/m²), 5810.91.0010 (over 200 g/m²). Embroidered polyester: 5810.92.1000"
+Leather wallet,4202316000,4202.31.6000,420231,8%,42023100,
+Nylon wallet,4202329300,4202.32.9300,420232,17.6%,42023290,

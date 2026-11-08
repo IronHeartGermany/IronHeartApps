@@ -2,13 +2,13 @@
 HS and COO Codes
 """
 
-from enum import IntEnum, StrEnum
+from enum import StrEnum
 
 from .sku import StartSKU
 
-class HSCodes(IntEnum):
+class HSCodes(StrEnum):
     """Harmonized System Codes"""
-    CODE1 = 0
+    CODE1 = "0"
 
 class COOCodes(StrEnum):
     """Country of Origin Codes"""

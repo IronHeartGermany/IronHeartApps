@@ -4,13 +4,13 @@ Utilities for CSV files
 
 import logging
 
-from .codes import (COOCodes,
-                    COO_CODES_CHINA,
-                    COO_CODES_GERMANY,
-                    COO_CODES_GREAT_BRITAIN,
-                    COO_CODES_JAPAN,
-                    COO_CODES_SINGAPORE,
-                    COO_CODES_USA)
+from .coo_codes import (COOCodes,
+                        COO_CODES_CHINA,
+                        COO_CODES_GERMANY,
+                        COO_CODES_GREAT_BRITAIN,
+                        COO_CODES_JAPAN,
+                        COO_CODES_SINGAPORE,
+                        COO_CODES_USA)
 from .columns import header_map, InventoryColumns, Field
 
 def validate_header(header: list[str]) -> bool:
