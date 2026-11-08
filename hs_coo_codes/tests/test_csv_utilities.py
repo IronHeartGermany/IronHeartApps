@@ -132,6 +132,23 @@ def test_create_row_with_codes():
     assert output_row is not None
     assert output_row[csv_utilities.InventoryColumns.HS_CODE] == "AAA"
     assert output_row[csv_utilities.InventoryColumns.COO] == csv_utilities.COOCodes.JAPAN.value
+    assert output_row[csv_utilities.InventoryColumns.US_HTS_CODE] == "BBB"
+
+def test_create_row_with_codes_has_us_hts():
+    """ Test creating a row in the CSV with the codes """
+
+    input_row = ['iron-heart-ih-666s-21-21oz-selvedge-denim-slim-straight-cut-jeans-indigo',
+                 'IH-666S-21 - 21oz Selvedge Denim Slim Straight Cut Jeans - Indigo', 'Size',
+                 '35', '', '', '', '', 'IH-666S-21', '', '', 'Hamburg Store IH Germany',
+                 '', '0', '0', '0', '0', '0', '', '', '', '', '','0123456789'
+                 ]
+
+    output_row = csv_utilities.create_row_with_codes(2, input_row)
+    assert output_row is not None
+    assert len(output_row) == len(csv_utilities.InventoryColumns)
+    assert output_row[csv_utilities.InventoryColumns.HS_CODE] == "AAA"
+    assert output_row[csv_utilities.InventoryColumns.COO] == csv_utilities.COOCodes.JAPAN.value
+    assert output_row[csv_utilities.InventoryColumns.US_HTS_CODE] == "BBB"
 
 def test_create_row_with_codes_no_sku():
     """ Test creating a row in the CSV with the codes when there is no SKU """
@@ -155,6 +172,17 @@ def test_header_with_us_hts():
         header = next(reader)
         new_header = csv_utilities.create_header(header)
         assert len(header) == csv_utilities.InventoryColumns.US_HTS_CODE.value
+        assert len(new_header) == csv_utilities.InventoryColumns.US_HTS_CODE.value + 1
+        assert csv_utilities.validate_header(header)
+        assert csv_utilities.validate_header(new_header)
+
+def test_header_having_us_hts():
+    """ Test that a header is not generated with the US HTS CODE column when it's there already"""
+    with open("data/test/valid_us_hts_code.csv", 'r', encoding='utf-8') as f:
+        reader = csv.reader(f)
+        header = next(reader)
+        assert len(header) == csv_utilities.InventoryColumns.US_HTS_CODE.value + 1
+        new_header = csv_utilities.create_header(header)
         assert len(new_header) == csv_utilities.InventoryColumns.US_HTS_CODE.value + 1
         assert csv_utilities.validate_header(header)
         assert csv_utilities.validate_header(new_header)

@@ -12,6 +12,7 @@ import sys
 import click
 
 from .columns import InventoryColumns
+from . import csv_utilities
 
 logging.basicConfig(
     level=logging.INFO,
@@ -46,6 +47,8 @@ def compare_inventory(input_file_1: str, input_file_2: str) -> bool:
             reader_2 = csv.reader(f_2)
 
             files_identical = True
+            header_len_0 = 0
+            header_len_1 = 0
 
             for index, (row_0, row_1) in enumerate(itertools.zip_longest(reader_1, reader_2),
                                                    start=1):
@@ -59,6 +62,28 @@ def compare_inventory(input_file_1: str, input_file_2: str) -> bool:
                     logging.error("%s is shorter than %s", input_file_2, input_file_1)
                     files_identical = False
                     break
+
+                # Validate headers
+                if index == 1:
+                    header_len_0 = len(row_0)
+                    if not csv_utilities.validate_header(row_0):
+                        logging.error("%s header not valid", input_file_1)
+                        return False
+                    header_len_1 = len(row_1)
+                    if not csv_utilities.validate_header(row_1):
+                        logging.error("%s header not valid", input_file_2)
+                        return False
+
+                # Check row lengths
+                if index != 1:
+                    if len(row_0) != header_len_0:
+                        logging.error("%s row has length %d but header has length %d",
+                                      input_file_1, len(row_0), header_len_0)
+                        return False
+                    if len(row_1) != header_len_1:
+                        logging.error("%s row has length %d but header has length %d",
+                                      input_file_2, len(row_1), header_len_1)
+                        return False
 
                 # Check if the row from the first file has the correct length
                 if len(row_0) != len(InventoryColumns) and len(row_0) != len(InventoryColumns) - 1:

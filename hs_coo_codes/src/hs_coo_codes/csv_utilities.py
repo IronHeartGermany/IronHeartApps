@@ -78,7 +78,10 @@ def validate_row(row_number: int,
 def create_header(header: list[str]) -> list[str]:
     """Create a header, including the US HTS Field"""
     new_header = header[:]
-    new_header.append(header_map[InventoryColumns.US_HTS_CODE][0])
+
+    if len(header) < len(InventoryColumns):
+        new_header.append(header_map[InventoryColumns.US_HTS_CODE][0])
+
     return new_header
 
 
@@ -120,7 +123,10 @@ def create_row_with_codes(row_number: int, row: list[str]) -> list[str] | None:
 
     new_row[InventoryColumns.HS_CODE] = hs_code
     new_row[InventoryColumns.COO] = coo_code
-    new_row.append(us_hts_code)
+    if len(row) < len(InventoryColumns):
+        new_row.append(us_hts_code)
+    else:
+        new_row[InventoryColumns.US_HTS_CODE] = us_hts_code
 
     return new_row
 

@@ -2,6 +2,8 @@
 Test the comparison of the inventory.
 """
 
+import csv
+
 from hs_coo_codes.compare_inventory import compare_inventory
 
 def test_same_file_csv():
@@ -48,3 +50,28 @@ def test_file_no_coo_code_header_csv():
 def test_file_us_hts_code_csv():
     """ Test a CSV file has a US HTS Code """
     assert compare_inventory("data/test/valid.csv", "data/test/valid_us_hts_code.csv")
+
+def test_rejects_row_missing_us_hts_column(tmp_path):
+    """Reject a 23-column row beneath a 24-column header."""
+    with open(
+        "data/test/valid_us_hts_code.csv",
+        encoding="utf-8",
+        newline="",
+    ) as source:
+        rows = list(csv.reader(source))
+
+    # Keep the US HTS header, but remove its value from the first row.
+    rows[1] = rows[1][:-1]
+
+    malformed_file = tmp_path / "missing_us_hts_column.csv"
+    with malformed_file.open(
+        "w", encoding="utf-8", newline=""
+    ) as output:
+        csv.writer(output).writerows(rows)
+
+    assert not compare_inventory(
+        "data/test/valid.csv", malformed_file
+    )
+    assert not compare_inventory(
+        malformed_file, "data/test/valid.csv"
+    )
