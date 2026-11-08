@@ -13,14 +13,14 @@ def test_short_header():
     with open("data/test/short_header.csv", 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
         header = next(reader)
-        assert not csv_utilities.validate_header(header)
+        assert not csv_utilities.validate_header(header, False)
 
 def test_bad_header_csv():
     """ Test that a CSV with a bad header returns false in validate_inventory """
     with open("data/test/bad_header.csv", 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
         header = next(reader)
-        assert not csv_utilities.validate_header(header)
+        assert not csv_utilities.validate_header(header, False)
 
 def test_empty_row_element_csv():
     """ Test that a CSV with an empty row element returns false in validate_inventory """
@@ -28,7 +28,7 @@ def test_empty_row_element_csv():
         reader = csv.reader(f)
         next(reader)
         row = next(reader)
-        assert not csv_utilities.validate_row(2, row, False, False)
+        assert not csv_utilities.validate_row(2, row, False, False, False)
 
 def test_row_too_short_csv():
     """ Test that a CSV with a short row returns false in validate_inventory """
@@ -37,7 +37,7 @@ def test_row_too_short_csv():
         next(reader)
         row = next(reader)
 
-        assert not csv_utilities.validate_row(2, row, False, False)
+        assert not csv_utilities.validate_row(2, row, False, False, False)
 
 def test_missing_hs_code():
     """ Test that missing HS Codes returns false when not ignored """
@@ -45,7 +45,7 @@ def test_missing_hs_code():
         reader = csv.reader(f)
         next(reader)
         row = next(reader)
-        assert not csv_utilities.validate_row(2, row, True, False)
+        assert not csv_utilities.validate_row(2, row, True, False, False)
 
 def test_space_as_hs_code():
     """ Test that a space as HS Code returns false when not ignored """
@@ -53,7 +53,7 @@ def test_space_as_hs_code():
         reader = csv.reader(f)
         next(reader)
         row = next(reader)
-        assert not csv_utilities.validate_row(2, row, True, False)
+        assert not csv_utilities.validate_row(2, row, True, False, False)
 
 def test_missing_coo():
     """ Test that missing COO returns false when not ignored """
@@ -61,7 +61,7 @@ def test_missing_coo():
         reader = csv.reader(f)
         next(reader)
         row = next(reader)
-        assert not csv_utilities.validate_row(2, row, False, True)
+        assert not csv_utilities.validate_row(2, row, False, True, False)
 
 def test_field_not_empty():
     """ Test a field that should be empty but is not returns false """
@@ -69,7 +69,7 @@ def test_field_not_empty():
         reader = csv.reader(f)
         next(reader)
         row = next(reader)
-        assert not csv_utilities.validate_row(2, row, False, False)
+        assert not csv_utilities.validate_row(2, row, False, False, False)
 
 def test_missing_hs_code_ignored():
     """ Test that missing HS Codes returns true when ignored """
@@ -77,7 +77,7 @@ def test_missing_hs_code_ignored():
         reader = csv.reader(f)
         next(reader)
         row = next(reader)
-        assert csv_utilities.validate_row(2, row, False, False)
+        assert csv_utilities.validate_row(2, row, False, False, False)
 
 def test_missing_coo_ignored():
     """ Test that missing COO returns true when ignored """
@@ -85,7 +85,7 @@ def test_missing_coo_ignored():
         reader = csv.reader(f)
         next(reader)
         row = next(reader)
-        assert csv_utilities.validate_row(2, row, False, False)
+        assert csv_utilities.validate_row(2, row, False, False, False)
 
 def test_valid_csv():
     """ Test that a valid CSV returns True """
@@ -93,7 +93,7 @@ def test_valid_csv():
         reader = csv.reader(f)
         next(reader)
         row = next(reader)
-        assert csv_utilities.validate_row(2, row, True, True)
+        assert csv_utilities.validate_row(2, row, True, True, False)
 
 def test_get_coo_codes_from_sku():
     """ Test getting the COO codes from the start of the SKUs """

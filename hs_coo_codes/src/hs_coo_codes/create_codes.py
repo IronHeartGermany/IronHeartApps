@@ -40,7 +40,7 @@ def create_codes(input_file, output_file) -> bool:
         return False
 
     # Validate input file
-    if not validate_inventory(input_file, False, False):
+    if not validate_inventory(input_file, False, False, False):
         logging.error("Validation of input file %s failed", input_file)
         return False
 
@@ -67,18 +67,19 @@ def create_codes(input_file, output_file) -> bool:
             writer = csv.writer(f_output)
 
             # Read and write the header
-            writer.writerow(next(reader))
+            header_row = next(reader)
+            writer.writerow(csv_utilities.create_header(header_row))
 
             # Parse each line of the input and add the HS and COO codes
-            for row_number, row in enumerate(reader):
-                new_row = csv_utilities.create_row_with_codes(row_number + 2, row)
+            for row_number, row in enumerate(reader, start=2):
+                new_row = csv_utilities.create_row_with_codes(row_number, row)
                 if new_row is None:
                     logging.error("Adding codes failed")
                     return False
                 writer.writerow(new_row)
 
         # Validate output file
-        if not validate_inventory(temporary_path, True, True):
+        if not validate_inventory(temporary_path, True, True, True):
             logging.error("Validation of output file %s failed", temporary_path)
             return False
 

@@ -47,7 +47,8 @@ def compare_inventory(input_file_1: str, input_file_2: str) -> bool:
 
             files_identical = True
 
-            for index, (row_0, row_1) in enumerate(itertools.zip_longest(reader_1, reader_2), start=1):
+            for index, (row_0, row_1) in enumerate(itertools.zip_longest(reader_1, reader_2),
+                                                   start=1):
 
                 # Check if files have different lengths
                 if row_0 is None:
@@ -60,14 +61,14 @@ def compare_inventory(input_file_1: str, input_file_2: str) -> bool:
                     break
 
                 # Check if the row from the first file has the correct length
-                if len(row_0) != len(InventoryColumns):
+                if len(row_0) != len(InventoryColumns) and len(row_0) != len(InventoryColumns) - 1:
                     logging.error("%s row_number=%d has length=%d but expected length=%d",
                                   input_file_1, index, len(row_0), len(InventoryColumns))
                     files_identical = False
                     break
 
                 # Check if the row from the second file has the correct length
-                if len(row_1) != len(InventoryColumns):
+                if len(row_1) != len(InventoryColumns) and len(row_1) != len(InventoryColumns) - 1:
                     logging.error("%s row_number=%d has length=%d but expected length=%d",
                                   input_file_2, index, len(row_1), len(InventoryColumns))
                     files_identical = False
@@ -76,7 +77,9 @@ def compare_inventory(input_file_1: str, input_file_2: str) -> bool:
                 # Compare each entry in each row for both files
                 for column in InventoryColumns:
                     # Skip comparisons for HS Code and COO Code (except in Header)
-                    if index != 1 and column in (InventoryColumns.HS_CODE, InventoryColumns.COO):
+                    if (column == InventoryColumns.US_HTS_CODE or
+                        (index != 1 and column in (InventoryColumns.HS_CODE,
+                                                   InventoryColumns.COO))):
                         continue
 
                     entry_0 = row_0[column.value]

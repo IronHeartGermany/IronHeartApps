@@ -29,6 +29,7 @@ class InventoryColumns(IntEnum):
     VARIANT_PACKED_WIDTH = 20
     VARIANT_PACKED_HEIGHT = 21
     VARIANT_PACKED_DIMENSION_UNIT = 22
+    US_HTS_CODE = 23 # Created in this program only
 
 class Field(Enum):
     """ Specify if a field is required, optional, or must be empty """
@@ -62,5 +63,6 @@ header_map: dict[int, tuple[str, Field]] = {
     InventoryColumns.VARIANT_PACKED_LENGTH: ("Variant Packed Length", Field.EMPTY),
     InventoryColumns.VARIANT_PACKED_WIDTH: ("Variant Packed Width", Field.EMPTY),
     InventoryColumns.VARIANT_PACKED_HEIGHT: ("Variant Packed Height", Field.EMPTY),
-    InventoryColumns.VARIANT_PACKED_DIMENSION_UNIT: ("Variant Packed Dimension Unit", Field.EMPTY)
+    InventoryColumns.VARIANT_PACKED_DIMENSION_UNIT: ("Variant Packed Dimension Unit", Field.EMPTY),
+    InventoryColumns.US_HTS_CODE: ("US HTS Code", Field.REQUIRED)
 }
