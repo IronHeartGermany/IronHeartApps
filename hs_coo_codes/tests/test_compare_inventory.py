@@ -44,3 +44,7 @@ def test_file_no_hs_code_header_csv():
 def test_file_no_coo_code_header_csv():
     """ Test a CSV file which does not have a COO Code in the header """
     assert not compare_inventory("data/test/no_coo_code_header.csv", "data/test/valid.csv")
+
+def test_file_us_hts_code_csv():
+    """ Test a CSV file has a US HTS Code """
+    assert compare_inventory("data/test/valid.csv", "data/test/valid_us_hts_code.csv")

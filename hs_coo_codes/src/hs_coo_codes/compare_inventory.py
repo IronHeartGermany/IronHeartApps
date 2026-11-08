@@ -62,21 +62,23 @@ def compare_inventory(input_file_1: str, input_file_2: str) -> bool:
 
                 # Check if the row from the first file has the correct length
                 if len(row_0) != len(InventoryColumns) and len(row_0) != len(InventoryColumns) - 1:
-                    logging.error("%s row_number=%d has length=%d but expected length=%d",
-                                  input_file_1, index, len(row_0), len(InventoryColumns))
+                    logging.error("%s row_number=%d has length=%d but expected length %d or %d",
+                                  input_file_1, index, len(row_0),
+                                  len(InventoryColumns), len(InventoryColumns) - 1)
                     files_identical = False
                     break
 
                 # Check if the row from the second file has the correct length
                 if len(row_1) != len(InventoryColumns) and len(row_1) != len(InventoryColumns) - 1:
-                    logging.error("%s row_number=%d has length=%d but expected length=%d",
-                                  input_file_2, index, len(row_1), len(InventoryColumns))
+                    logging.error("%s row_number=%d has length=%d but expected length %d or %d",
+                                  input_file_2, index, len(row_1),
+                                  len(InventoryColumns), len(InventoryColumns) - 1)
                     files_identical = False
                     break
 
                 # Compare each entry in each row for both files
                 for column in InventoryColumns:
-                    # Skip comparisons for HS Code and COO Code (except in Header)
+                    # Skip US HTS Code; skip HS Code and COO Code except in the header
                     if (column == InventoryColumns.US_HTS_CODE or
                         (index != 1 and column in (InventoryColumns.HS_CODE,
                                                    InventoryColumns.COO))):

@@ -21,18 +21,21 @@ logging.basicConfig(
 @click.option('--input-file', required=True, type=click.Path(exists=True), help="Input CSV file.")
 @click.option('--check-hs', is_flag=True, help="Check for existence of HS Code in CSV.")
 @click.option('--check-coo', is_flag=True, help="Check for existence of COO Code in CSV.")
-@click.option('--check-us-htc', is_flag=True, help="Check for existence of US HTC Code in CSV.")
-def cli(input_file, check_hs, check_coo, check_us_htc):
+@click.option('--check-us-hts', is_flag=True, help="Check for existence of US HTS Code in CSV.")
+def cli(input_file, check_hs, check_coo, check_us_hts):
     """Main function"""
 
-    if validate_inventory(input_file, check_hs, check_coo, check_us_htc):
+    if validate_inventory(input_file, check_hs, check_coo, check_us_hts):
         logging.info("Validation successful")
     else:
         logging.critical("Validation failed")
         sys.exit(1)
 
 
-def validate_inventory(input_file: str, check_hs: bool, check_coo: bool, check_us_htc) -> bool:
+def validate_inventory(input_file: str,
+                       check_hs: bool,
+                       check_coo: bool,
+                       check_us_hts: bool) -> bool:
     """ Validate the inventory CSV """
     try:
         with open(input_file, 'r', encoding='utf-8', newline="") as f:
@@ -46,13 +49,18 @@ def validate_inventory(input_file: str, check_hs: bool, check_coo: bool, check_u
                 return False
 
             # Validate header
-            if not csv_utilities.validate_header(header, check_us_htc):
+            if not csv_utilities.validate_header(header):
                 logging.error("Header validation failed")
+                return False
+
+            # The US HTS column must exist when US HTS codes are checked
+            if check_us_hts and len(header) != len(csv_utilities.InventoryColumns):
+                logging.error("US HTS Code column is missing from the header")
                 return False
 
             # Validate rows after header
             for index, row in enumerate(reader, start=2):
-                if not csv_utilities.validate_row(index, row, check_hs, check_coo, check_us_htc):
+                if not csv_utilities.validate_row(index, len(header), row, check_hs, check_coo, check_us_hts):
                     logging.error("Row validation failed")
                     return False
 

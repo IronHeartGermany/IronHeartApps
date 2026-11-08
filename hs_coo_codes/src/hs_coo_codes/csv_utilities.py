@@ -13,60 +13,62 @@ from .coo_codes import (COOCodes,
                         COO_CODES_USA)
 from .columns import header_map, InventoryColumns, Field
 
-def validate_header(header: list[str], check_us_htc: bool) -> bool:
+def validate_header(header: list[str]) -> bool:
     """ Validate the header in the CSV file """
 
     # Validate header length
-    expected_header_length = len(InventoryColumns) if check_us_htc else len(InventoryColumns) - 1
-    if len(header) != expected_header_length:
-        logging.error("Observed %s header columns but expected %s header columns",
+    header_length = len(header)
+    expected_header_length = len(InventoryColumns)
+    if header_length not in (expected_header_length, expected_header_length - 1):
+        logging.error("Observed %s header columns but expected %s or %s header columns",
                       len(header),
-                      expected_header_length)
+                      expected_header_length,
+                      expected_header_length - 1)
         return False
 
     # Validate each entry in the header
-    for column in InventoryColumns:
-        if not check_us_htc and column == InventoryColumns.US_HTS_CODE:
-            continue
+    for column in range(header_length):
         expected_title, _ = header_map[column]
-        if header[column.value] != expected_title:
+        if header[column] != expected_title:
             logging.error("Observed header field %s in column %d but expected %s",
-                          header[column.value], column.value, expected_title)
+                          header[column], column, expected_title)
             return False
 
     return True
 
 
 def validate_row(row_number: int,
+                 header_length: int,
                  row: list[str],
                  check_hs: bool,
                  check_coo: bool,
-                 check_us_htc: bool) -> bool:
+                 check_us_hts: bool) -> bool:
     """
-    Validate a row in the CSV file by checking if entries exist or do not exist
-    depending on the expectations.
+    Validate a row in the CSV file by checking if row length is same as header length
+    and entries exist or do not exist depending on the expectations.
     """
 
-    expected_row_length = len(InventoryColumns) if check_us_htc else len(InventoryColumns) - 1
-    if len(row) != expected_row_length:
-        logging.error("Row %d has length %d but is expected to have length %d",
-                      row_number, len(row), expected_row_length)
+    row_length = len(row)
+
+    if row_length != header_length:
+        logging.error("Header has length %d but row %d has length %d",
+                      header_length, row_number, row_length)
         return False
 
-    for column in InventoryColumns:
-        if not check_hs and column == InventoryColumns.HS_CODE:
+    for column in range(row_length):
+        if not check_hs and column == InventoryColumns.HS_CODE.value:
             continue
-        if not check_coo and column == InventoryColumns.COO:
+        if not check_coo and column == InventoryColumns.COO.value:
             continue
-        if not check_us_htc and column == InventoryColumns.US_HTS_CODE:
+        if not check_us_hts and column == InventoryColumns.US_HTS_CODE.value:
             continue
 
         title, field_required = header_map[column]
-        if row[column.value] and field_required == Field.EMPTY:
+        if row[column] and field_required == Field.EMPTY:
             logging.error("(Row %d Column %s) has value %s but was expected to be empty",
-                          row_number, title, row[column.value])
+                          row_number, title, row[column])
             return False
-        if not row[column.value].strip() and field_required == Field.REQUIRED:
+        if not row[column].strip() and field_required == Field.REQUIRED:
             logging.error("(Row %d Column %s) does not have a value but is expected to have one",
                           row_number, title)
             return False
@@ -74,7 +76,7 @@ def validate_row(row_number: int,
 
 
 def create_header(header: list[str]) -> list[str]:
-    """Create a header, including the US HTC Field"""
+    """Create a header, including the US HTS Field"""
     new_header = header[:]
     new_header.append(header_map[InventoryColumns.US_HTS_CODE][0])
     return new_header
@@ -89,7 +91,7 @@ def create_row_with_codes(row_number: int, row: list[str]) -> list[str] | None:
     if not sku:
         # Handle products without an SKU
         hs_code = "AAA"
-        us_htc_code = "BBB"
+        us_hts_code = "BBB"
 
         title = row[InventoryColumns.TITLE]
         coo_code = get_coo_from_sku(title.split("-", 1)[0], False)
@@ -98,7 +100,7 @@ def create_row_with_codes(row_number: int, row: list[str]) -> list[str] | None:
     else:
         # Handle products with an SKU
         hs_code = "AAA"
-        us_htc_code = "BBB"
+        us_hts_code = "BBB"
         coo_code = get_coo_from_sku(sku.split("-", 1)[0])
 
     if hs_code is None:
@@ -107,8 +109,8 @@ def create_row_with_codes(row_number: int, row: list[str]) -> list[str] | None:
     if coo_code is None:
         logging.error("Generated COO Code of None for row %d", row_number)
         return None
-    if us_htc_code is None:
-        logging.error("Generated US HTC Code of None for row %d", row_number)
+    if us_hts_code is None:
+        logging.error("Generated US HTS Code of None for row %d", row_number)
         return None
 
     # Check if existing COO code does not match current COO code
@@ -118,7 +120,7 @@ def create_row_with_codes(row_number: int, row: list[str]) -> list[str] | None:
 
     new_row[InventoryColumns.HS_CODE] = hs_code
     new_row[InventoryColumns.COO] = coo_code
-    new_row.append(us_htc_code)
+    new_row.append(us_hts_code)
 
     return new_row
 

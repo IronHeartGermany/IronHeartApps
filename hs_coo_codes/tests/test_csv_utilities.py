@@ -13,87 +13,87 @@ def test_short_header():
     with open("data/test/short_header.csv", 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
         header = next(reader)
-        assert not csv_utilities.validate_header(header, False)
+        assert not csv_utilities.validate_header(header)
 
 def test_bad_header_csv():
     """ Test that a CSV with a bad header returns false in validate_inventory """
     with open("data/test/bad_header.csv", 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
         header = next(reader)
-        assert not csv_utilities.validate_header(header, False)
+        assert not csv_utilities.validate_header(header)
 
 def test_empty_row_element_csv():
     """ Test that a CSV with an empty row element returns false in validate_inventory """
     with open("data/test/empty_row_element.csv", 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
-        next(reader)
+        header = next(reader)
         row = next(reader)
-        assert not csv_utilities.validate_row(2, row, False, False, False)
+        assert not csv_utilities.validate_row(2, len(header), row, False, False, False)
 
 def test_row_too_short_csv():
     """ Test that a CSV with a short row returns false in validate_inventory """
     with open("data/test/short_row.csv", 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
-        next(reader)
+        header = next(reader)
         row = next(reader)
 
-        assert not csv_utilities.validate_row(2, row, False, False, False)
+        assert not csv_utilities.validate_row(2, len(header), row, False, False, False)
 
 def test_missing_hs_code():
     """ Test that missing HS Codes returns false when not ignored """
     with open("data/test/missing_hs_code.csv", 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
-        next(reader)
+        header = next(reader)
         row = next(reader)
-        assert not csv_utilities.validate_row(2, row, True, False, False)
+        assert not csv_utilities.validate_row(2, len(header), row, True, False, False)
 
 def test_space_as_hs_code():
     """ Test that a space as HS Code returns false when not ignored """
     with open("data/test/space_hs_code.csv", 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
-        next(reader)
+        header = next(reader)
         row = next(reader)
-        assert not csv_utilities.validate_row(2, row, True, False, False)
+        assert not csv_utilities.validate_row(2, len(header), row, True, False, False)
 
 def test_missing_coo():
     """ Test that missing COO returns false when not ignored """
     with open("data/test/missing_coo.csv", 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
-        next(reader)
+        header = next(reader)
         row = next(reader)
-        assert not csv_utilities.validate_row(2, row, False, True, False)
+        assert not csv_utilities.validate_row(2, len(header), row, False, True, False)
 
 def test_field_not_empty():
     """ Test a field that should be empty but is not returns false """
     with open("data/test/field_should_be_empty.csv", 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
-        next(reader)
+        header = next(reader)
         row = next(reader)
-        assert not csv_utilities.validate_row(2, row, False, False, False)
+        assert not csv_utilities.validate_row(2, len(header), row, False, False, False)
 
 def test_missing_hs_code_ignored():
     """ Test that missing HS Codes returns true when ignored """
     with open("data/test/missing_hs_code.csv", 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
-        next(reader)
+        header = next(reader)
         row = next(reader)
-        assert csv_utilities.validate_row(2, row, False, False, False)
+        assert csv_utilities.validate_row(2, len(header), row, False, False, False)
 
 def test_missing_coo_ignored():
     """ Test that missing COO returns true when ignored """
     with open("data/test/missing_coo.csv", 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
-        next(reader)
+        header = next(reader)
         row = next(reader)
-        assert csv_utilities.validate_row(2, row, False, False, False)
+        assert csv_utilities.validate_row(2, len(header), row, False, False, False)
 
 def test_valid_csv():
     """ Test that a valid CSV returns True """
     with open("data/test/valid.csv", 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
-        next(reader)
+        header = next(reader)
         row = next(reader)
-        assert csv_utilities.validate_row(2, row, True, True, False)
+        assert csv_utilities.validate_row(2, len(header), row, True, True, False)
 
 def test_get_coo_codes_from_sku():
     """ Test getting the COO codes from the start of the SKUs """
@@ -146,3 +146,31 @@ def test_create_row_with_codes_no_sku():
     assert output_row is not None
     assert output_row[csv_utilities.InventoryColumns.HS_CODE] == "AAA"
     assert output_row[csv_utilities.InventoryColumns.COO] == csv_utilities.COOCodes.JAPAN.value
+    assert output_row[csv_utilities.InventoryColumns.US_HTS_CODE] == "BBB"
+
+def test_header_with_us_hts():
+    """ Test that a header is generated with the US HTS CODE column """
+    with open("data/test/valid.csv", 'r', encoding='utf-8') as f:
+        reader = csv.reader(f)
+        header = next(reader)
+        new_header = csv_utilities.create_header(header)
+        assert len(header) == csv_utilities.InventoryColumns.US_HTS_CODE.value
+        assert len(new_header) == csv_utilities.InventoryColumns.US_HTS_CODE.value + 1
+        assert csv_utilities.validate_header(header)
+        assert csv_utilities.validate_header(new_header)
+
+def test_valid_csv_with_us_hts_code():
+    """ Test that a valid CSV with US HTS Code returns True """
+    with open("data/test/valid_us_hts_code.csv", 'r', encoding='utf-8') as f:
+        reader = csv.reader(f)
+        header = next(reader)
+        row = next(reader)
+        assert csv_utilities.validate_row(2, len(header), row, True, True, True)
+
+def test_row_length_does_not_match_header():
+    """ Test that a valid CSV row length different from header length returns False """
+    with open("data/test/valid_us_hts_code.csv", 'r', encoding='utf-8') as f:
+        reader = csv.reader(f)
+        header = next(reader)
+        row = next(reader)
+        assert not csv_utilities.validate_row(2, len(header) - 1, row, True, True, True)
