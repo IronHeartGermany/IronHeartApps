@@ -51,27 +51,15 @@ def test_file_us_hts_code_csv():
     """ Test a CSV file has a US HTS Code """
     assert compare_inventory("data/test/valid.csv", "data/test/valid_us_hts_code.csv")
 
-def test_rejects_row_missing_us_hts_column(tmp_path):
-    """Reject a 23-column row beneath a 24-column header."""
-    with open(
-        "data/test/valid_us_hts_code.csv",
-        encoding="utf-8",
-        newline="",
-    ) as source:
-        rows = list(csv.reader(source))
-
-    # Keep the US HTS header, but remove its value from the first row.
+def test_missing_us_hts_column_csv(tmp_path):
+    """ Test a CSV file with a US HTS Code header but a row without the column """
+    with open("data/test/valid_us_hts_code.csv", 'r', encoding='utf-8', newline="") as f:
+        rows = list(csv.reader(f))
     rows[1] = rows[1][:-1]
 
     malformed_file = tmp_path / "missing_us_hts_column.csv"
-    with malformed_file.open(
-        "w", encoding="utf-8", newline=""
-    ) as output:
-        csv.writer(output).writerows(rows)
+    with open(malformed_file, 'w', encoding='utf-8', newline="") as f:
+        csv.writer(f).writerows(rows)
 
-    assert not compare_inventory(
-        "data/test/valid.csv", malformed_file
-    )
-    assert not compare_inventory(
-        malformed_file, "data/test/valid.csv"
-    )
+    assert not compare_inventory("data/test/valid.csv", malformed_file)
+    assert not compare_inventory(malformed_file, "data/test/valid.csv")

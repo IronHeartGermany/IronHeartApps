@@ -68,38 +68,22 @@ def compare_inventory(input_file_1: str, input_file_2: str) -> bool:
                     header_len_0 = len(row_0)
                     if not csv_utilities.validate_header(row_0):
                         logging.error("%s header not valid", input_file_1)
-                        return False
+                        files_identical = False
                     header_len_1 = len(row_1)
                     if not csv_utilities.validate_header(row_1):
                         logging.error("%s header not valid", input_file_2)
-                        return False
+                        files_identical = False
 
                 # Check row lengths
                 if index != 1:
                     if len(row_0) != header_len_0:
-                        logging.error("%s row has length %d but header has length %d",
-                                      input_file_1, len(row_0), header_len_0)
-                        return False
+                        logging.error("%s row %d has length %d but header has length %d",
+                                      input_file_1, index, len(row_0), header_len_0)
+                        files_identical = False
                     if len(row_1) != header_len_1:
-                        logging.error("%s row has length %d but header has length %d",
-                                      input_file_2, len(row_1), header_len_1)
-                        return False
-
-                # Check if the row from the first file has the correct length
-                if len(row_0) != len(InventoryColumns) and len(row_0) != len(InventoryColumns) - 1:
-                    logging.error("%s row_number=%d has length=%d but expected length %d or %d",
-                                  input_file_1, index, len(row_0),
-                                  len(InventoryColumns), len(InventoryColumns) - 1)
-                    files_identical = False
-                    break
-
-                # Check if the row from the second file has the correct length
-                if len(row_1) != len(InventoryColumns) and len(row_1) != len(InventoryColumns) - 1:
-                    logging.error("%s row_number=%d has length=%d but expected length %d or %d",
-                                  input_file_2, index, len(row_1),
-                                  len(InventoryColumns), len(InventoryColumns) - 1)
-                    files_identical = False
-                    break
+                        logging.error("%s row %d has length %d but header has length %d",
+                                      input_file_2, index, len(row_1), header_len_1)
+                        files_identical = False
 
                 # Compare each entry in each row for both files
                 for column in InventoryColumns:

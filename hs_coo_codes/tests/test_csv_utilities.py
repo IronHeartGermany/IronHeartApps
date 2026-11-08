@@ -135,12 +135,12 @@ def test_create_row_with_codes():
     assert output_row[csv_utilities.InventoryColumns.US_HTS_CODE] == "BBB"
 
 def test_create_row_with_codes_has_us_hts():
-    """ Test creating a row in the CSV with the codes """
+    """ Test that an existing US HTS value is replaced, not appended """
 
     input_row = ['iron-heart-ih-666s-21-21oz-selvedge-denim-slim-straight-cut-jeans-indigo',
                  'IH-666S-21 - 21oz Selvedge Denim Slim Straight Cut Jeans - Indigo', 'Size',
                  '35', '', '', '', '', 'IH-666S-21', '', '', 'Hamburg Store IH Germany',
-                 '', '0', '0', '0', '0', '0', '', '', '', '', '','0123456789'
+                 '', '0', '0', '0', '0', '0', '', '', '', '', '', '0123456789'
                  ]
 
     output_row = csv_utilities.create_row_with_codes(2, input_row)
