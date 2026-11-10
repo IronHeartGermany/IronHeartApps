@@ -11,6 +11,9 @@ from .coo_codes import (COOCodes,
                         COO_CODES_JAPAN,
                         COO_CODES_SINGAPORE,
                         COO_CODES_USA)
+
+from .hs_codes import HSCodes
+
 from .columns import header_map, InventoryColumns, Field
 
 def validate_header(header: list[str]) -> bool:
@@ -157,4 +160,15 @@ def get_coo_from_title(title: str) -> str | None:
         return COOCodes.JAPAN
 
     logging.error("Could not map title '%s' to COO", title)
+    return None
+
+def get_hs_from_sku_and_title(sku: str, title: str) -> str:
+    """Get the US HTS Codes from the SKU and Title"""
+    # Iron Heart Jeans
+    if "IH-555" in sku or "IH-634" in sku or "IH-666" in sku or "IH-684" in sku or "IH-888" in sku or "IH-814" in sku or "IH-819" in sku:
+        # Superblack, black fades to grey, black denim
+        if "SB" in sku or "BLK" in sku:
+            return HSCodes.JEANS_BLACK_DENIM
+        return HSCodes.JEANS_BLUE_DENIM
+
     return None

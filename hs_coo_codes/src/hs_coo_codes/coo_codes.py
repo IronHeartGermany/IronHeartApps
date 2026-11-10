@@ -1,5 +1,5 @@
 """
-HS and COO Codes
+COO Codes
 """
 
 from enum import StrEnum
