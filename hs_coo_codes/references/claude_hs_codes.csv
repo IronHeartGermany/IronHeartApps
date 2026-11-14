@@ -2,6 +2,8 @@ Product group,US HTS code,US HTS code (formatted),6-digit HS,General duty,EU cod
 "Jeans, blue denim",6203424511,6203.42.4511,620342,16.6%,6203423100,"Men's cotton trousers, blue denim"
 "Jeans, black/grey denim",6203424518,6203.42.4518,620342,16.6%,6203423100,"Not blue, so 'other' men's cotton trousers"
 "Other trousers (chinos), cotton",6203424518,6203.42.4518,620342,16.6%,62034235,Corduroy: 6203.42.4506
+"Shorts, cotton (woven, incl. denim, corduroy)",6203424551,6203.42.4551,620342,16.6%,— (not in list),"One US code for all men's woven cotton shorts: blue denim, black denim and corduroy included. Not knitted (sweat shorts are a different heading, 6103), swimwear or bib overalls"
+"Bib overalls, cotton (woven, incl. denim)",6203422510,6203.42.2510,620342,10.3%,— (not in list),Bib and shoulder straps. Insulated for cold weather: 6203.42.2505. Not trousers or shorts; sleeved coveralls/boilersuits are a different heading (6211)
 "Cotton shirt, flannel (napped check)",6205202047,6205.20.2047,620520,19.7%,6205200090,"Two or more colours in the weave, napped. Not corduroy"
 "Cotton shirt, chambray/denim/check (not napped)",6205202051,6205.20.2051,620520,19.7%,6205200090,Two or more colours in warp/weft. Not corduroy
 "Cotton shirt, single colour",6205202067,6205.20.2067,620520,19.7%,6205200090,Not corduroy
@@ -13,10 +15,14 @@ Wool jacket,6201204011,6201.20.4011,620120,49.7¢/kg + 19.7%,6201110090,Overcoat
 Nylon / polyester jacket,6201407511,6201.40.7511,620140,27.7%,6201930000,Water resistant: 6201.40.7000 (7.1%)
 "Performance outerwear jacket, nylon / polyester",6201404500,6201.40.4500,620140,7.1%,— (not in list),"Recreational performance outerwear (Ch. 62 Add. US Note 3): water resistant or plastic-coated, critically sealed seams, 5+ listed features; keep records. This code also needs the Add. US Note 2 water-resistance test (max 1.0 g water at 600 mm, AATCC 35, from a rubber/plastics application); plastic coating alone is not enough. Fabric coated/laminated per heading 5903/5906/5907: check 6210.40 first (3.3–7.1%). Otherwise: 6201.40.5011 (27.7%). Down: 6201.40.2500 (4.4%) only if, by weight, 10% or more down, or 15% or more down and waterfowl plumage of which down is 35% or more; 'down-filled' alone is not enough"
 "Performance outerwear jacket, cotton",6201304000,6201.30.4000,620130,6.2%,— (not in list),"Same conditions, water-resistance test and 6210.40 check as above. Otherwise: 6201.30.5051 (9.4%). Down: 6201.30.3000 (4.4%), only if the same down thresholds are met"
+"Vest, cotton, unpadded (incl. denim, corduroy)",6211329070,6211.32.9070,621132,8.1%,— (not in list),"Ordinary waistcoat-type vest. Insulated for cold weather: 6211.32.9010. Padded outerwear vest: 6201.30.8010 (9.4%), with sleeve attachments 6201.30.8005. Down (thresholds as above): 6201.30.6000 (4.4%)"
+"Vest, wool, unpadded",6211393040,6211.39.3040,621139,12%,— (not in list),Ordinary waistcoat-type vest. Padded outerwear vest: 6201.20.3500 (8.5%)
+"Vest, nylon / polyester, unpadded",6211339054,6211.33.9054,621133,16%,— (not in list),"Under 36% wool (36% or more: 6211.33.9052). Padded outerwear vest: 6201.40.6020 (14.9%), with sleeve attachments 6201.40.6010. Down: 6201.40.5500 (4.4%)"
 "Leather boots, welted, lace-up (incl. heritage 'work' boots)",6403913040,6403.91.3040,640391,5%,6403911100 / 6403919600,"Covers the ankle; outsole of rubber, plastics or composition leather; uppers not pigskin (pigskin: 6403.91.3035). Leather outsole: 6403.51.3030 (5%). Work footwear 6403.91.3010 (5%) only if built for occupational use with hazard protection. US has no 24 cm split"
 "Leather engineer boots, welted (pull-on)",6403913040,6403.91.3040,640391,5%,6403911100 / 6403919600,"Same sole/upper conditions and leather-outsole alternative as above. Slip-on, so never 'work footwear' (Ch. 64 Stat. Note 1(a)). Not welted: 6403.91.6075 (8.5%)"
 Leather jacket,4203104030,4203.10.4030,420310,6%,4203100000,
 Leather shirt,4203104085,4203.10.4085,420310,6%,42031000,
+"Knitted shirt, nylon / polyester (incl. fleece shirts)",6105202010,6105.20.2010,610520,32%,— (not in list),"Under 23% wool (23% or more: 6105.20.1000, 13.6%). Must be a shirt: sleeves, front opening from the neckline, no pockets below the waist, no tightening at the bottom. Otherwise a jacket, cardigan or pullover (6110). Fleece, snaps or a CPO name alone don't decide it; confirm knit construction"
 Cotton T-shirt,6109100012,6109.10.0012,610910,16.5%,6109100010,Plain all-white T-shirt: 6109.10.0004
 Cotton cap (woven),6505002060,6505.00.2060,650500,7.5%,6114200000,EU code 6114 is the wrong heading for hats
 Cotton beanie (knitted),6505001540,6505.00.1540,650500,7.9%,6114200000,EU code 6114 is the wrong heading for hats
@@ -38,6 +44,7 @@ Leather laces,4205002000,4205.00.2000,420500,Free,42050090,
 Cotton bag (canvas tote / travel),4202921500,4202.92.1500,420292,6.3%,63052000,EU code 6305 is packing sacks
 Polyester / nylon bag,4202923131,4202.92.3131,420292,17.6%,42022290,Backpack: 4202.92.3120. Handbag: 4202.22.8100
 Cotton bandana,6213201000,6213.20.1000,621320,13.2%,62132000,"Hemmed, no lace or embroidery, no side over 60 cm. Larger: 6214.90.0010 (11.3%)"
+Wool blanket / travelling rug,6301200010,6301.20.0010,630120,Free,— (not in list),"Length up to 3 m. Over 3 m: 6301.20.0020 (Free). Wool must predominate by weight. Not electric blankets, quilts/duvets or floor rugs"
 China mug,6911104500,6911.10.4500,691110,14%,69111000,"Porcelain, not bone china, not sold as a set"
 "Patch, woven cotton",5807102010,5807.10.2010,580710,3.3%,58071010,"Polyester woven: 5807.10.2020. Embroidered cotton: 5810.91.0020 (not over 200 g/m²), 5810.91.0010 (over 200 g/m²). Embroidered polyester: 5810.92.1000"
 Leather wallet,4202316000,4202.31.6000,420231,8%,42023100,

@@ -12,9 +12,10 @@ from .coo_codes import (COOCodes,
                         COO_CODES_SINGAPORE,
                         COO_CODES_USA)
 
-from .hs_codes import HSCodes
-
 from .columns import header_map, InventoryColumns, Field
+
+from .hs_codes_for_ih import get_hs_code_for_ih
+
 
 def validate_header(header: list[str]) -> bool:
     """ Validate the header in the CSV file """
@@ -93,20 +94,20 @@ def create_row_with_codes(row_number: int, row: list[str]) -> list[str] | None:
     new_row = row[:]
 
     sku = row[InventoryColumns.SKU]
+    title = row[InventoryColumns.TITLE].lower()
 
     if not sku:
         # Handle products without an SKU
-        hs_code = "AAA"
         us_hts_code = "BBB"
+        hs_code = "AAA"
 
-        title = row[InventoryColumns.TITLE]
         coo_code = get_coo_from_sku(title.split("-", 1)[0], False)
         if coo_code is None:
             coo_code = get_coo_from_title(title.split(" ", 1)[0].strip())
     else:
         # Handle products with an SKU
+        us_hts_code = get_hs_from_sku_and_title(sku, title)
         hs_code = "AAA"
-        us_hts_code = "BBB"
         coo_code = get_coo_from_sku(sku.split("-", 1)[0])
 
     if hs_code is None:
@@ -156,19 +157,21 @@ def get_coo_from_sku(sku_start: str, log: bool=True) -> str | None:
 def get_coo_from_title(title: str) -> str | None:
     """Get the COO from the Title"""
     title_start = title.split(" ", 1)[0].strip()
-    if title_start in ("Rats", "Trophy"):
+    if title_start in ("rats", "trophy", "ih-xxx-dd") or "pe-skull" in title:
         return COOCodes.JAPAN
+    if "htc-eagle" in title:
+        return COOCodes.USA
 
     logging.error("Could not map title '%s' to COO", title)
     return None
 
-def get_hs_from_sku_and_title(sku: str, title: str) -> str:
+def get_hs_from_sku_and_title(sku: str, title: str) -> None | str:
     """Get the US HTS Codes from the SKU and Title"""
-    # Iron Heart Jeans
-    if "IH-555" in sku or "IH-634" in sku or "IH-666" in sku or "IH-684" in sku or "IH-888" in sku or "IH-814" in sku or "IH-819" in sku:
-        # Superblack, black fades to grey, black denim
-        if "SB" in sku or "BLK" in sku:
-            return HSCodes.JEANS_BLACK_DENIM
-        return HSCodes.JEANS_BLUE_DENIM
+    # Iron Heart
+    hs_code = get_hs_code_for_ih(sku, title)
+    if hs_code is not None:
+        return hs_code
 
-    return None
+    return "XXX" # TODO: update
+
+
