@@ -36,6 +36,11 @@ def get_hs_code_for_ih(sku: str, title: str) -> None | str:
     if hs_code is not None:
         return hs_code
 
+    # Iron Heart Military
+    hs_code = _get_hs_ih_military(sku, title)
+    if hs_code is not None:
+        return hs_code
+
     #logging.error("Could not determine HS Code for Iron Heart for product with SKU=%s and title=%s",
     #              sku, title)
     return None
@@ -137,5 +142,19 @@ def _get_hs_ih_sweats(sku: str, title: str) -> None | str:
             return HSCodes.COTTON_SWEATSHIRT
         if "sweat shorts" in title:
             return HSCodes.COTTON_SHORTS
+
+    return None
+
+def _get_hs_ih_military(sku: str, title: str) -> None | str:
+    """Get the US HTS Codes for IH Military"""
+    if sku.startswith(StartSKU.IH_MILITARY + "-"):
+        if "jacket" in title:
+            if any(word in title for word in ("sateen", "oiled cotton",
+                                              "whipcord", "serge", "duck")):
+                return HSCodes.COTTON_JACKET_OTHER
+            if any(word in title for word in ("nylon")):
+                return HSCodes.SYNTHETIC_JACKET
+        if "field coat" in title:
+            return HSCodes.COTTON_JACKET_OTHER
 
     return None
