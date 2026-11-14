@@ -14,32 +14,13 @@ from .hs_codes import (HSCodes,
 
 from .sku import StartSKU
 
+
 def get_hs_code_for_ih(sku: str, title: str) -> None | str:
     """Get the HS Code for Iron Heart"""
-    # Iron Heart Bottoms
-    hs_code = _get_hs_ih_bottoms(sku, title)
-    if hs_code is not None:
-        return hs_code
-
-    # Iron Heart Shirts
-    hs_code = _get_hs_ih_shirts(sku, title)
-    if hs_code is not None:
-        return hs_code
-
-    # Iron Heart Jackets
-    hs_code = _get_hs_ih_jackets(sku, title)
-    if hs_code is not None:
-        return hs_code
-
-    # Iron Heart Sweats
-    hs_code = _get_hs_ih_sweats(sku, title)
-    if hs_code is not None:
-        return hs_code
-
-    # Iron Heart Military
-    hs_code = _get_hs_ih_military(sku, title)
-    if hs_code is not None:
-        return hs_code
+    for lookup in _IH_LOOKUPS:
+        hs_code = lookup(sku, title)
+        if hs_code is not None:
+            return hs_code
 
     #logging.error("Could not determine HS Code for Iron Heart for product with SKU=%s and title=%s",
     #              sku, title)
@@ -158,3 +139,12 @@ def _get_hs_ih_military(sku: str, title: str) -> None | str:
             return HSCodes.COTTON_JACKET_OTHER
 
     return None
+
+
+_IH_LOOKUPS = (
+    _get_hs_ih_bottoms,
+    _get_hs_ih_shirts,
+    _get_hs_ih_jackets,
+    _get_hs_ih_sweats,
+    _get_hs_ih_military,
+)
