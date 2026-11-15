@@ -37,7 +37,8 @@ def _get_hs_ih_bags(sku: str, title: str) -> None | str:
             return HSCodes.COTTON_TOTE_BAG
         if any(word in title for word in ("leather waist bag",
                                           "leather diamond stitched shoulder bag")):
-            return HSCodes.LEATHER_WAIST_BAG
+            return HSCodes.LEATHER_SLING_BAG
+
 
     return None
 
@@ -129,8 +130,8 @@ def _get_hs_ih_germany(sku: str, title: str) -> None | str:
             return HSCodes.COTTON_SOCKS
         if "leather keyring" in title:
             return HSCodes.LEATHER_ARTICLES
-        if any(word in title for word in ("keyring", "keychain")) and "leather" not in title:
-            return HSCodes.KEY_RING
+        if "denim keychain" in title:
+            return HSCodes.OTHER_TEXTILES
         if any(word in title for word in ("cordovan card holder", "calf folding wallet",
                                           "trucker wallet", "cordovan wallet")):
             return HSCodes.LEATHER_WALLET
@@ -172,6 +173,8 @@ def _get_hs_ih_military(sku: str, title: str) -> None | str:
     """Get the US HTS Codes for IH Military"""
     if sku.startswith(StartSKU.IH_MILITARY + "-"):
         if "jacket" in title:
+            if "denim" in title:
+                return HSCodes.COTTON_JACKET_BLUE_DENIM
             if any(word in title for word in ("sateen", "oiled cotton",
                                               "whipcord", "serge", "duck")):
                 return HSCodes.COTTON_JACKET_OTHER
