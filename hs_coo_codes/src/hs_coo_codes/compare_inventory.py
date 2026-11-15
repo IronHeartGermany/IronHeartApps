@@ -56,34 +56,32 @@ def compare_inventory(input_file_1: str, input_file_2: str) -> bool:
                 # Check if files have different lengths
                 if row_0 is None:
                     logging.error("%s is shorter than %s", input_file_1, input_file_2)
-                    files_identical = False
-                    break
+                    return False
                 if row_1 is None:
                     logging.error("%s is shorter than %s", input_file_2, input_file_1)
-                    files_identical = False
-                    break
+                    return False
 
                 # Validate headers
                 if index == 1:
                     header_len_0 = len(row_0)
                     if not csv_utilities.validate_header(row_0):
                         logging.error("%s header not valid", input_file_1)
-                        files_identical = False
+                        return False
                     header_len_1 = len(row_1)
                     if not csv_utilities.validate_header(row_1):
                         logging.error("%s header not valid", input_file_2)
-                        files_identical = False
+                        return False
 
                 # Check row lengths
                 if index != 1:
                     if len(row_0) != header_len_0:
                         logging.error("%s row %d has length %d but header has length %d",
                                       input_file_1, index, len(row_0), header_len_0)
-                        files_identical = False
+                        return False
                     if len(row_1) != header_len_1:
                         logging.error("%s row %d has length %d but header has length %d",
                                       input_file_2, index, len(row_1), header_len_1)
-                        files_identical = False
+                        return False
 
                 # Compare each entry in each row for both files
                 for column in InventoryColumns:
@@ -98,7 +96,7 @@ def compare_inventory(input_file_1: str, input_file_2: str) -> bool:
                     if entry_0 != entry_1:
                         logging.error("In row=%d column=%s: %s != %s",
                                       index, column.name, entry_0, entry_1)
-                        files_identical = False
+                        return False
 
     except FileNotFoundError as e:
         logging.error("File could not be found: %s", e)
@@ -107,7 +105,7 @@ def compare_inventory(input_file_1: str, input_file_2: str) -> bool:
         logging.error("Comparison failed: %s", e)
         return False
 
-    return files_identical
+    return True
 
 
 if __name__ == "__main__":

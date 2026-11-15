@@ -156,7 +156,7 @@ def get_coo_from_sku(sku_start: str, log: bool=True) -> str | None:
 
 def get_coo_from_title(title: str) -> str | None:
     """Get the COO from the Title"""
-    title_start = title.split(" ", 1)[0].strip()
+    title_start = title.lower().split(" ", 1)[0].strip()
     if title_start in ("rats", "trophy", "ih-xxx-dd") or "pe-skull" in title:
         return COOCodes.JAPAN
     if "htc-eagle" in title:
@@ -172,6 +172,6 @@ def get_hs_from_sku_and_title(sku: str, title: str) -> None | str:
     if hs_code is not None:
         return hs_code
 
-    return "None" # TODO: update
+    return "XXX" # TODO: update
 
 

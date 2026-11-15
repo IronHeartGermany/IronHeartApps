@@ -42,12 +42,21 @@ def _get_hs_ih_bags(sku: str, title: str) -> None | str:
     return None
 
 
+def _get_hs_ih_belts(sku: str, title: str) -> None | str:
+    """Get the US HTS Codes for IH Belts"""
+    if sku.startswith(StartSKU.IH_BELTS + "-"):
+        if "leather" in title:
+            return HSCodes.LEATHER_BELT
+
+    return None
+
+
 def _get_hs_ih_bottoms(sku: str, title: str) -> None | str:
     """Get the US HTS Codes for IH Bottoms """
     # Iron Heart Jeans
     if sku.startswith(IH_JEANS):
         # Super black, black fades to grey, black denim
-        if sku.endswith(("SB", "BLK")):
+        if sku.endswith(("SB", "BLK", "SBG")):
             return HSCodes.JEANS_BLACK_DENIM
         return HSCodes.JEANS_BLUE_DENIM
 
@@ -71,10 +80,13 @@ def _get_hs_ih_bottoms(sku: str, title: str) -> None | str:
     if sku.startswith("IH-"):
         if "V" in sku and "vest" in title:
             return HSCodes.COTTON_VEST
-        if "J" in sku:
-            if "denim" in title and not ("black" in title or "overdye" in title):
+        if any(word in sku for word in ("J", "L", "G")):
+            if "denim" in title and not any(
+                word in title for word in ("black", "overdye", "white")
+            ):
                 return HSCodes.COTTON_JACKET_BLUE_DENIM
-            if "super" in title or "overdye" in title or "duck" in title:
+            if any(word in title for word in ("super", "overdye", "duck",
+                                              "whipcord", "black", "white")):
                 return HSCodes.COTTON_JACKET_OTHER
 
     return None
@@ -100,7 +112,6 @@ def _get_hs_ih_caps(sku: str, _: str) -> None | str:
 
 
 def _get_hs_ih_germany(sku: str, title: str) -> None | str:
-    """Get the US HTS Codes for IH Germany"""
     if sku.startswith(StartSKU.IH_GERMANY + "-"):
         if "cotton ribbed beanie" in title:
             return HSCodes.COTTON_HAT_KNITTED
@@ -114,9 +125,11 @@ def _get_hs_ih_germany(sku: str, title: str) -> None | str:
             return HSCodes.COTTON_BANDANA_HANDKERCHIEF
         if "mug" in title:
             return HSCodes.PORCELAIN_MUG
-        if any(word in title for word in ("ihg-030", "ihg-029")):
+        if sku.startswith(("IHG-030", "IHG-029")):
             return HSCodes.COTTON_SOCKS
-        if any(word in title for word in ("keyring", "keychain")):
+        if "leather keyring" in title:
+            return HSCodes.LEATHER_ARTICLES
+        if any(word in title for word in ("keyring", "keychain")) and "leather" not in title:
             return HSCodes.KEY_RING
         if any(word in title for word in ("cordovan card holder", "calf folding wallet",
                                           "trucker wallet", "cordovan wallet")):
@@ -125,11 +138,8 @@ def _get_hs_ih_germany(sku: str, title: str) -> None | str:
             return HSCodes.COTTON_APRON
         if "pouch" in title:
             return HSCodes.COTTON_POUCH
-        if "muffler" in title:
+        if all(word in title for word in ("muffler", "primaloft")):
             return HSCodes.SYNTHETIC_MUFFLER
-
-
-        print("--------> ", sku, title)
 
     return None
 
@@ -138,14 +148,14 @@ def _get_hs_ih_jackets(sku: str, title: str) -> None | str:
     """Get the US HTS Codes for IH Jackets"""
     if sku.startswith(StartSKU.IH_JACKETS + "-"):
         if any(word in title for word in ("denim", "wabash")):
-            if any(word in title for word in ("black", "super", "overdye")):
+            if any(word in title for word in ("black", "super", "overdye", "white")):
                 return HSCodes.COTTON_JACKET_OTHER
             return HSCodes.COTTON_JACKET_BLUE_DENIM
         if any(word in title for word in ("whipcord", "herringbone", "moleskin",
                                           "chino", "duck", "hickory", "kersey",
                                           "canvas", "twill", "piqué", "paraffin",
                                           "oiled cotton", "reversible tanker",
-                                          "serge", "ox riders", "quilted rider")):
+                                          "serge", "ox riders")):
             return HSCodes.COTTON_JACKET_OTHER
         if "corduroy" in title:
             return HSCodes.COTTON_JACKET_CORDUROY
@@ -165,8 +175,10 @@ def _get_hs_ih_military(sku: str, title: str) -> None | str:
             if any(word in title for word in ("sateen", "oiled cotton",
                                               "whipcord", "serge", "duck")):
                 return HSCodes.COTTON_JACKET_OTHER
-            if any(word in title for word in ("nylon")):
+            if any(word in title for word in ("nylon",)):
                 return HSCodes.SYNTHETIC_JACKET
+            if any(word in title for word in ("wool",)):
+                return HSCodes.WOOL_JACKET
         if "field coat" in title:
             return HSCodes.COTTON_JACKET_OTHER
 
@@ -179,6 +191,8 @@ def _get_hs_ih_printed(sku: str, title: str) -> None | str:
         if "t-shirt" in title:
             return HSCodes.COTTON_T_SHIRT
 
+    return None
+
 
 def _get_hs_ih_patches(sku: str, _: str) -> None | str:
     """Get the US HTS Codes for IH Patches"""
@@ -190,7 +204,7 @@ def _get_hs_ih_patches(sku: str, _: str) -> None | str:
 def _get_hs_ih_shirts(sku: str, title: str) -> None | str:
     """Get the US HTS Codes for IH Shirts"""
     if sku.startswith(StartSKU.IH_SHIRTS + "-"):
-        if any(word in title for word in ("uhf", "flannel", "check")):
+        if any(word in title for word in ("uhf", "flannel", "check")) and "madras" not in title:
             return HSCodes.COTTON_SHIRT_FLANNEL
         if any(word in title for word in ("chambray", "summer shirt")):
             return HSCodes.COTTON_SHIRT_CHAMBRAY
@@ -198,16 +212,15 @@ def _get_hs_ih_shirts(sku: str, title: str) -> None | str:
             return HSCodes.COTTON_SHIRT_CORDUROY
         if "denim" in title:
             return HSCodes.COTTON_SHIRT_DENIM
-        if any(word in title for word in ("madras", "double cloth", "ihsh-308-ind")):
+        if any(word in title for word in ("madras", "double cloth", "ihsh-308-ind",
+                                          "hickory", "wabash")):
             return HSCodes.COTTON_SHIRT_MULTI_COLOR
-        if any(word in title for word in ("serge",  "hickory", "wabash", "kersey", "whipcord",
+        if any(word in title for word in ("serge", "kersey", "whipcord",
                                           "satin", "dobby", "waffle", "fatigue", "twill",
                                           "moleskin", "oxford", "sateen", "ripstop", "duck",
                                           "sashiko", "johnny", "military", "gauze", "mechanic",
                                           "linen", "ihsh-410-blk", "ihsh-424-ind")):
             return HSCodes.COTTON_SHIRT_SINGLE_COLOR
-        if "corduroy" in title:
-            return HSCodes.COTTON_SHIRT_CORDUROY
         if "micro fleece" in title:
             return HSCodes.SYNTHETIC_SHIRT
         if "leather" in title:
@@ -254,7 +267,7 @@ def _get_hs_ih_sweats(sku: str, title: str) -> None | str:
                                           "zip up sweater", "sweater jacket")):
             return HSCodes.COTTON_SWEATSHIRT
         if "sweat shorts" in title:
-            return HSCodes.COTTON_SHORTS
+            return HSCodes.COTTON_SHORTS_KNITTED
 
     return None
 
@@ -262,9 +275,9 @@ def _get_hs_ih_sweats(sku: str, title: str) -> None | str:
 def _get_hs_ih_tees(sku: str, title: str) -> None | str:
     """Get the US HTS Codes for IH Tees"""
     if sku.startswith(StartSKU.IH_TEES + "-"):
-        if all(word in title for word in ("11oz", "t-shirt")):
-            return HSCodes.COTTON_KNITTED_PULLOVER
-        if "t-shirt" in title and ("6.5oz" in title or "7.5" in title):
+        if sku.startswith(("IHT-1610-WHT", "IHT-1610L-WHT")):
+            return HSCodes.COTTON_T_SHIRT_WHITE
+        if "t-shirt" in title and any(word in title for word in ("6.5oz", "7.5oz", "11oz")):
             return HSCodes.COTTON_T_SHIRT
 
     return None
@@ -314,6 +327,7 @@ def _get_hs_ih_wool(sku: str, title: str) -> None | str:
 
 _IH_LOOKUPS = (
     _get_hs_ih_bags,
+    _get_hs_ih_belts,
     _get_hs_ih_bottoms,
     _get_hs_ih_brass,
     _get_hs_ih_caps,

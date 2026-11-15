@@ -130,9 +130,9 @@ def test_create_row_with_codes():
 
     output_row = csv_utilities.create_row_with_codes(2, input_row)
     assert output_row is not None
-    assert output_row[csv_utilities.InventoryColumns.HS_CODE] == "AAA"
+    assert output_row[csv_utilities.InventoryColumns.HS_CODE] == "620342"
     assert output_row[csv_utilities.InventoryColumns.COO] == csv_utilities.COOCodes.JAPAN.value
-    assert output_row[csv_utilities.InventoryColumns.US_HTS_CODE] == "BBB"
+    assert output_row[csv_utilities.InventoryColumns.US_HTS_CODE] == "6203424511"
 
 def test_create_row_with_codes_has_us_hts():
     """ Test that an existing US HTS value is replaced, not appended """
@@ -146,9 +146,9 @@ def test_create_row_with_codes_has_us_hts():
     output_row = csv_utilities.create_row_with_codes(2, input_row)
     assert output_row is not None
     assert len(output_row) == len(csv_utilities.InventoryColumns)
-    assert output_row[csv_utilities.InventoryColumns.HS_CODE] == "AAA"
+    assert output_row[csv_utilities.InventoryColumns.HS_CODE] == "620342"
     assert output_row[csv_utilities.InventoryColumns.COO] == csv_utilities.COOCodes.JAPAN.value
-    assert output_row[csv_utilities.InventoryColumns.US_HTS_CODE] == "BBB"
+    assert output_row[csv_utilities.InventoryColumns.US_HTS_CODE] == "6203424511"
 
 def test_create_row_with_codes_no_sku():
     """ Test creating a row in the CSV with the codes when there is no SKU """
