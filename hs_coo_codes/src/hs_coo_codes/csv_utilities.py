@@ -107,7 +107,7 @@ def create_row_with_codes(row_number: int, row: list[str]) -> list[str] | None:
     else:
         # Handle products with an SKU
         us_hts_code = get_hs_from_sku_and_title(sku, title)
-        hs_code = "AAA"
+        hs_code = us_hts_code[:6] if len(us_hts_code) >= 6 else us_hts_code
         coo_code = get_coo_from_sku(sku.split("-", 1)[0])
 
     if hs_code is None:
@@ -172,6 +172,6 @@ def get_hs_from_sku_and_title(sku: str, title: str) -> None | str:
     if hs_code is not None:
         return hs_code
 
-    return "XXX" # TODO: update
+    return "None" # TODO: update
 
 
