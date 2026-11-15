@@ -14,6 +14,8 @@ from .hs_codes import (HSCodes,
 
 from .sku import StartSKU
 
+_IH_SKU_STARTS = {start for start in StartSKU if start.name.startswith("IH_")}
+
 
 def get_hs_code_for_ih(sku: str, title: str) -> None | str:
     """Get the HS Code for Iron Heart"""
@@ -22,8 +24,10 @@ def get_hs_code_for_ih(sku: str, title: str) -> None | str:
         if hs_code is not None:
             return hs_code
 
-    #logging.error("Could not determine HS Code for Iron Heart for product with SKU=%s and title=%s",
-    #              sku, title)
+    if sku.split("-", 1)[0] in _IH_SKU_STARTS:
+        logging.error("Could not determine HS Code for Iron Heart for product (SKU=%s title=%s)",
+                      sku, title)
+
     return None
 
 
@@ -38,7 +42,6 @@ def _get_hs_ih_bags(sku: str, title: str) -> None | str:
         if any(word in title for word in ("leather waist bag",
                                           "leather diamond stitched shoulder bag")):
             return HSCodes.LEATHER_SLING_BAG
-
 
     return None
 
@@ -57,9 +60,9 @@ def _get_hs_ih_bottoms(sku: str, title: str) -> None | str:
     # Iron Heart Jeans
     if sku.startswith(IH_JEANS):
         # Super black, black fades to grey, black denim
-        if sku.endswith(("SB", "BLK", "SBG")):
-            return HSCodes.JEANS_BLACK_DENIM
-        return HSCodes.JEANS_BLUE_DENIM
+        if "denim" in title and not any(word in title for word in ("black", "overdye", "white")):
+            return HSCodes.JEANS_BLUE_DENIM
+        return HSCodes.JEANS_BLACK_DENIM
 
     # Iron Heart Cotton Trousers
     if sku.startswith(IH_COTTON_TROUSERS):
@@ -79,9 +82,9 @@ def _get_hs_ih_bottoms(sku: str, title: str) -> None | str:
 
     # Vests and jackets with format IH-XXXV and IH-XXXJ
     if sku.startswith("IH-"):
-        if "V" in sku and "vest" in title:
+        if "vest" in title:
             return HSCodes.COTTON_VEST
-        if any(word in sku for word in ("J", "L", "G")):
+        if any(word in title for word in ("jacket", "type iii")):
             if "denim" in title and not any(
                 word in title for word in ("black", "overdye", "white")
             ):
@@ -113,6 +116,7 @@ def _get_hs_ih_caps(sku: str, _: str) -> None | str:
 
 
 def _get_hs_ih_germany(sku: str, title: str) -> None | str:
+    """Get the US HTS Codes for IH Germany"""
     if sku.startswith(StartSKU.IH_GERMANY + "-"):
         if "cotton ribbed beanie" in title:
             return HSCodes.COTTON_HAT_KNITTED
@@ -132,6 +136,9 @@ def _get_hs_ih_germany(sku: str, title: str) -> None | str:
             return HSCodes.LEATHER_ARTICLES
         if "denim keychain" in title:
             return HSCodes.OTHER_TEXTILES
+        if any(word in title for word in ("keyring", "keychain")) and ("leather" not in title
+                                                                       and "denim" not in title):
+            return HSCodes.KEY_RING
         if any(word in title for word in ("cordovan card holder", "calf folding wallet",
                                           "trucker wallet", "cordovan wallet")):
             return HSCodes.LEATHER_WALLET
@@ -175,8 +182,11 @@ def _get_hs_ih_military(sku: str, title: str) -> None | str:
         if "jacket" in title:
             if "denim" in title:
                 return HSCodes.COTTON_JACKET_BLUE_DENIM
-            if any(word in title for word in ("sateen", "oiled cotton",
-                                              "whipcord", "serge", "duck")):
+            if any(word in title for word in ("sateen",
+                                              "oiled cotton",
+                                              "whipcord",
+                                              "serge",
+                                              "duck")) or sku.startswith("IHM-41"):
                 return HSCodes.COTTON_JACKET_OTHER
             if any(word in title for word in ("nylon",)):
                 return HSCodes.SYNTHETIC_JACKET
@@ -278,8 +288,6 @@ def _get_hs_ih_sweats(sku: str, title: str) -> None | str:
 def _get_hs_ih_tees(sku: str, title: str) -> None | str:
     """Get the US HTS Codes for IH Tees"""
     if sku.startswith(StartSKU.IH_TEES + "-"):
-        if sku.startswith(("IHT-1610-WHT", "IHT-1610L-WHT")):
-            return HSCodes.COTTON_T_SHIRT_WHITE
         if "t-shirt" in title and any(word in title for word in ("6.5oz", "7.5oz", "11oz")):
             return HSCodes.COTTON_T_SHIRT
 

@@ -51,6 +51,10 @@ def test_file_us_hts_code_csv():
     """ Test a CSV file has a US HTS Code """
     assert compare_inventory("data/test/valid.csv", "data/test/valid_us_hts_code.csv")
 
+def test_short_header_csv():
+    """ Test that a CSV with a short header returns false """
+    assert not compare_inventory("data/test/short_header.csv", "data/test/valid.csv")
+
 def test_missing_us_hts_column_csv(tmp_path):
     """ Test a CSV file with a US HTS Code header but a row without the column """
     with open("data/test/valid_us_hts_code.csv", 'r', encoding='utf-8', newline="") as f:
