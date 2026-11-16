@@ -8,3 +8,5 @@ src/hs_coo_codes.egg-info/*
 *.zip
 *~
 output/*
+
+.DS_Store

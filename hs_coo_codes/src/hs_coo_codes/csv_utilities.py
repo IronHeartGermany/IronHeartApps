@@ -15,6 +15,7 @@ from .coo_codes import (COOCodes,
 from .columns import header_map, InventoryColumns, Field
 
 from .hs_codes_for_ih import get_hs_code_for_ih
+from .hs_codes_for_non_ih import get_hs_code_for_non_ih
 
 
 def validate_header(header: list[str]) -> bool:
@@ -169,6 +170,11 @@ def get_hs_from_sku_and_title(sku: str, title: str) -> None | str:
     """Get the US HTS Codes from the SKU and Title"""
     # Iron Heart
     hs_code = get_hs_code_for_ih(sku, title)
+    if hs_code is not None:
+        return hs_code
+
+    # Non Iron Heart
+    hs_code = get_hs_code_for_non_ih(sku, title)
     if hs_code is not None:
         return hs_code
 
