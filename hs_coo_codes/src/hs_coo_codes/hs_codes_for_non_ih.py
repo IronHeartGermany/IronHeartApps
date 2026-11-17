@@ -98,6 +98,39 @@ def _get_hs_code_for_mustang(sku: str, title: str):
     return None
 
 
+def _get_hs_code_for_peanuts(sku: str, title: str):
+    """Get the US HTS Codes for Peanuts"""
+    if sku.startswith(StartSKU.PEANUTS + "-"):
+        if "t-shirt" in title:
+            return HSCodes.COTTON_T_SHIRT
+        if "boxer shorts" in title:
+            return HSCodes.COTTON_WOVEN_BOXERS
+        if all(word in title for word in ("cotton", "shoes")):
+            return HSCodes.NON_ATHLETIC_SNEAKERS
+        if "bandana" in title:
+            return HSCodes.COTTON_BANDANA_HANDKERCHIEF
+        if all(word in title for word in ("cotton", "newspaper", "bag")):
+            return HSCodes.COTTON_HANDBAG
+        if all(word in title for word in ("trucker", "wallet", "leather")):
+            return HSCodes.LEATHER_WALLET
+        if "silver" in title:
+            return HSCodes.SILVER_JEWELRY
+        if "brass" in title:
+            if "key" in title and any(word in title for word in ("chain", "hook",
+                                                                 "ring", "holder")):
+                return HSCodes.BRASS_KEY_HOOK
+            if "pendant" in title:
+                return HSCodes.BRASS_JEWELRY
+            if "wallet chain" in title:
+                return HSCodes.BRASS_CHAIN
+            if "carabiner" in title:
+                return HSCodes.BRASS_KEY_HOOK
+            if "zippo" in title:
+                return HSCodes.BRASS_LIGHTER
+
+    return None
+
+
 _NON_IH_LOOKUPS = (
     _get_hs_code_for_bn3th,
     _get_hs_code_for_sacred_dog,
@@ -106,4 +139,5 @@ _NON_IH_LOOKUPS = (
     _get_hs_code_for_asahi,
     _get_hs_code_for_clutch,
     _get_hs_code_for_mustang,
+    _get_hs_code_for_peanuts,
 )
