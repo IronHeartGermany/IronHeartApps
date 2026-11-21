@@ -51,6 +51,10 @@ def _get_hs_code_for_simmons_bilt(sku: str, title: str):
     if sku.startswith(StartSKU.SIMMONS_BILT + "-"):
         if "shirt" in title:
             return HSCodes.LEATHER_SHIRT
+        if all(word in title for word in ("jacket", "wool")):
+            return HSCodes.WOOL_JACKET
+        if "sheep" in title:
+            return HSCodes.SHEEP_JACKET
         if any(word in title for word in ("jacket", "horsehide")):
             return HSCodes.LEATHER_JACKET
 
@@ -143,11 +147,9 @@ def _get_hs_code_for_porter(sku: str, title: str):
         if any(word in title for word in("counter shade backpack", "explorer daypack",
                                          "force daypack")):
             return HSCodes.SYNTHETIC_BACKPACK
-        if any(word in title for word in("monochrome messenger", "hybrid 2way briefcase"
+        if any(word in title for word in("monochrome messenger", "hybrid 2way briefcase",
                                          "heat messenger bag", "force 3way briefcase",
-                                         "heat 2way briefcase", "tanker 2way briefcase",
-                                         "force 3way briefcase", "heat messenger bag",
-                                         "hybrid 2way briefcase")):
+                                         "heat 2way briefcase", "tanker 2way briefcase")):
             return HSCodes.SYNTHETIC_MESSENGER_OR_BRIEFCASE
         if any(word in title for word in ("force shoulder bag", "force shoulder pouch",
                                           "tanker shoulder bag", "counter shade shoulder bag",
@@ -200,7 +202,7 @@ def _get_hs_code_for_utilitees(sku: str, title: str):
 def _get_hs_code_for_bee_natural(sku: str, title: str):
     """Get the US HTS Codes for Bee Natural"""
     if sku.startswith(StartSKU.BEE_NATURAL + "-"):
-        if "mink oil cream" in title:
+        if "mink oil" in title:
             return HSCodes.LEATHER_POLISH_OR_CREAM
 
     return None
@@ -221,22 +223,23 @@ def _get_hs_code_for_dehen(sku: str, title: str):
         if any(word in title for word in ("crew sweatshirt", "heavy duty hoodie")):
             return HSCodes.COTTON_SWEATSHIRT
         if any(word in title for word in ("t-shirt",)):
-            if "white" in title:
+            if "white" in title and "pocket" not in title:
                 return HSCodes.COTTON_T_SHIRT_WHITE
             return HSCodes.COTTON_T_SHIRT
         if any(word in title for word in ("moto-hoodie", "moto-jersey", "moto-sweater")):
-            return HSCodes.COTTON_T_SHIRT
+            return HSCodes.WOOL_SWEATER_FINE_KNIT
         if any(word in title for word in ("wool knit watch cap",)):
             return HSCodes.WOOL_HAT_KNITTED
         if any(word in title for word in ("varsity jacket",)):
             return HSCodes.WOOL_JACKET
         if any(word in title for word in ("waxed canvas n-1 deck jacket",)):
             return HSCodes.SHEEP_JACKET
-        if any(word in title for word in ("flyer's club jacket waxed cotton",
-                                          "japanese sateen", "carrier flight jacket",
+        if any(word in title for word in ("japanese sateen", "carrier flight jacket",
                                           "sashiko crissman overshirt",
-                                          "pilot jacket dry wax cotton",
                                           "pilot jacket cotton sashiko")):
+            return HSCodes.COTTON_JACKET_OTHER
+        if any(word in title for word in ("flyer's club jacket waxed cotton",
+                                          "pilot jacket dry wax cotton")):
             return HSCodes.COTTON_JACKET_OTHER
         if any(word in title for word in ("flight vest sateen",)):
             return HSCodes.COTTON_VEST
@@ -258,12 +261,12 @@ def _get_hs_code_for_good_art(sku: str, title: str):
                                               "balm cap")):
                 return HSCodes.SILVER_JEWELRY
         if "brass" in title:
-            if any(word in title for word in ("belt loop buddy")):
+            if any(word in title for word in ("belt loop buddy",)):
                 return HSCodes.BRASS_KEY_HOOK
         if "custom order" in title:
             return HSCodes.SILVER_JEWELRY
         if "long sleeve t-shirt" in title:
-            return HSCodes.COTTON_T_SHIRT
+            return HSCodes.COTTON_KNITTED_PULLOVER
         if "army navy wallet" in title:
             return HSCodes.LEATHER_WALLET
         if "rubber biscuit rosette bracelet" in title:
@@ -323,19 +326,12 @@ def _get_hs_code_for_wesco(sku: str, title: str):
 def _get_hs_code_for_wigwam(sku: str, title: str):
     """Get the US HTS Codes for Wigwam"""
     if sku.startswith(StartSKU.WIGWAM + "-"):
-        if any(word in title for word in ("work crew")):
+        if any(word in title for word in ("work crew",)):
             return HSCodes.COTTON_SOCKS
-        if any(word in title for word in ("work durasole")):
+        if any(word in title for word in ("work durasole",)):
             return HSCodes.SYNTHETIC_BLEND_SOCKS
-        if any(word in title for word in ("wool workmate")):
+        if any(word in title for word in ("wool workmate", "merino")):
             return HSCodes.WOOL_SOCKS
-
-    return None
-
-def _get_hs_code_for_other(sku: str, _: str):
-    """Get the US HTS Codes for Other Products"""
-    if sku.startswith("BEE-NATURAL"):
-        return HSCodes.LEATHER_POLISH_OR_CREAM
 
     return None
 
@@ -360,5 +356,4 @@ _NON_IH_LOOKUPS = (
     _get_hs_code_for_red_rabbit,
     _get_hs_code_for_wesco,
     _get_hs_code_for_wigwam,
-    _get_hs_code_for_other
 )
