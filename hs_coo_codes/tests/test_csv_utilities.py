@@ -4,8 +4,11 @@ Test the validation of the CSV utilities.
 
 import csv
 
+import pytest
+
 from hs_coo_codes import coo_codes
 from hs_coo_codes import csv_utilities
+from hs_coo_codes.hs_codes import HSCodes
 
 
 def test_short_header():
@@ -161,9 +164,9 @@ def test_create_row_with_codes_no_sku():
 
     output_row = csv_utilities.create_row_with_codes(2, input_row)
     assert output_row is not None
-    assert output_row[csv_utilities.InventoryColumns.HS_CODE] == "AAA"
+    assert output_row[csv_utilities.InventoryColumns.HS_CODE] == "620342"
     assert output_row[csv_utilities.InventoryColumns.COO] == csv_utilities.COOCodes.JAPAN.value
-    assert output_row[csv_utilities.InventoryColumns.US_HTS_CODE] == "BBB"
+    assert output_row[csv_utilities.InventoryColumns.US_HTS_CODE] == "6203424511"
 
 def test_header_with_us_hts():
     """ Test that a header is generated with the US HTS CODE column """
@@ -202,3 +205,40 @@ def test_row_length_does_not_match_header():
         header = next(reader)
         row = next(reader)
         assert not csv_utilities.validate_row(2, len(header) - 1, row, True, True, True)
+
+
+# One real title per rule for products without an SKU, taken from the inventory export.
+# Titles are passed as they appear in Shopify; the test lowercases them like create_row_with_codes.
+TITLE_CASES = [
+    ("Rats Get Fat T-Shirt Grey", HSCodes.COTTON_T_SHIRT),
+    ("Trophy - Box Logo OD LS Tee Gun Black", HSCodes.COTTON_KNITTED_PULLOVER),
+    ("Trophy - Machine Age Flannel Shirt Olive", HSCodes.COTTON_SHIRT_FLANNEL),
+    ("Trophy - Coke Stripe Pants 11 Oz Natural", HSCodes.COTTON_TROUSERS),
+    ("Trophy - Dirt Denim Coverall 14,5 Oz", HSCodes.COTTON_JACKET_BLUE_DENIM),
+    ("Trophy - Watchman Cap Black", HSCodes.COTTON_HAT_KNITTED),
+    ("Trophy - 15th Anniversary 1605 Jeans 14,5 Oz Standard Dirt Denim", HSCodes.JEANS_BLUE_DENIM),
+    ("Trophy - 47 Civilian Trousers Khaki", HSCodes.COTTON_TROUSERS),
+    ("PE-SKULL-POISON-RING-BLACK - Peanuts & Co SKULL POISON Ring - Silver/ Zirconia Black (Kopie)",
+     HSCodes.SILVER_JEWELRY),
+    ("HTC-EAGLE-BELT-BLK - Hollywood Trading Co. Eagle Belt w/ turquoise stones - Black",
+     HSCodes.LEATHER_BELT),
+    ("IH-XXX-DD - Double Duck Type I Jacket - Indigo", HSCodes.COTTON_JACKET_OTHER),
+]
+
+
+@pytest.mark.parametrize("title, expected", TITLE_CASES, ids=[case[0] for case in TITLE_CASES])
+def test_get_hs_from_title(title, expected):
+    """ Test that each product without an SKU gets the expected US HTS code from its title """
+    assert csv_utilities.get_hs_from_title(title.lower()) == expected
+
+
+@pytest.mark.parametrize("title", [
+    # Only long-sleeved Trophy tees are pullovers
+    "Trophy - Box Logo OD Tee Black",
+    # Duck jackets only match the Iron Heart IH-XXX-DD sample
+    "Dehen 1920 Duck Jacket - Brown",
+    "Unknown Product",
+])
+def test_get_hs_from_title_no_match(title):
+    """ Test that titles without a matching rule return None """
+    assert csv_utilities.get_hs_from_title(title.lower()) is None

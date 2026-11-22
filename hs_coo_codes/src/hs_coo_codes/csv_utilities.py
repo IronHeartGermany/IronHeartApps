@@ -111,17 +111,14 @@ def create_row_with_codes(row_number: int, row: list[str]) -> list[str] | None:
         us_hts_code = get_hs_from_sku_and_title(sku, title)
         coo_code = get_coo_from_sku(sku.split("-", 1)[0])
 
-    hs_code = us_hts_code[:6] if len(us_hts_code) >= 6 else us_hts_code
-
-    if hs_code is None:
-        logging.error("Generated HS Code of None for row %d", row_number)
-        return None
     if coo_code is None:
-        logging.error("Generated COO Code of None for row %d", row_number)
+        logging.error("Generated COO Code of None for row %d (sku=%s, title=%s)", row_number, sku, title)
         return None
+
     if us_hts_code is None:
-        logging.error("Generated US HTS Code of None for row %d", row_number)
+        logging.error("Generated US HTS Code of None for row %d (sku=%s, title=%s)", row_number, sku, title)
         return None
+    hs_code = us_hts_code[:6] if len(us_hts_code) >= 6 else us_hts_code
 
     # Check if existing COO code does not match current COO code
     if row[InventoryColumns.COO] and coo_code != row[InventoryColumns.COO]:
@@ -175,7 +172,7 @@ def get_hs_from_title(title: str) -> None | str:
     """Get the US HTS Codes from the Title"""
     if all(word in title for word in ("rats", "t-shirt")):
         return HSCodes.COTTON_T_SHIRT
-    if all(word in title for word in ("trophy", "tee")):
+    if all(word in title for word in ("trophy", "ls tee")):
         return HSCodes.COTTON_KNITTED_PULLOVER
     if all(word in title for word in ("trophy", "flannel")):
         return HSCodes.COTTON_SHIRT_FLANNEL
@@ -193,9 +190,10 @@ def get_hs_from_title(title: str) -> None | str:
         return HSCodes.SILVER_JEWELRY
     if all(word in title for word in ("hollywood trading", "belt")):
         return HSCodes.LEATHER_BELT
-    if all(word in title for word in ("duck", "jacket")):
+    if all(word in title for word in ("ih-xxx-dd", "duck", "jacket")):
         return HSCodes.COTTON_JACKET_OTHER
 
+    logging.error("Could not map title '%s' to HS Code", title)
     return None
 
 
