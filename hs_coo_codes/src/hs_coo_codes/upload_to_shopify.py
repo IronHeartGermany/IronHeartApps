@@ -11,6 +11,7 @@ from typing import NamedTuple
 import click
 
 from .columns import InventoryColumns
+from .coo_codes import COOCodes
 from . import csv_utilities
 
 class Codes(NamedTuple):
@@ -59,7 +60,9 @@ def upload_to_shopify(input_file: str) -> bool:
             return False
 
         # Create dictionary from inventory IDs to codes (used to upload codes)
-        shopify_id_to_codes = _create_id_to_codes(csv_sku_to_codes, shopify_sku_to_items)
+        shopify_id_to_codes, skipped_skus = _create_id_to_codes(csv_sku_to_codes, shopify_sku_to_items)
+        if len(skipped_skus) > 0:
+            return False
 
         # Upload codes to Shopify
         if not _upload_codes_to_shopify(shopify_id_to_codes):
@@ -86,6 +89,18 @@ def _get_csv_sku_to_codes(reader, row_length: int) -> dict[str, Codes] | None:
         hs = row[InventoryColumns.HS_CODE.value]
         us_hts = row[InventoryColumns.US_HTS_CODE.value]
 
+        # Validate values that will be uploaded
+        if coo not in COOCodes:
+            logging.error("Invalid COO Code (%s) in row %d", coo, index)
+            return None
+        if not (len(us_hts) == 10 and us_hts.isdigit() and us_hts.isascii()):
+            logging.error("US HTS Code (%s) is not 10-digit ASCII in row %d", us_hts, index)
+            return None
+        if not hs == us_hts[:6]:
+            logging.error("HS Code (%s) is not first 6 digits of US HTS Code (%s) in row %d",
+                          hs, us_hts, index)
+            return None
+
         if not sku:
             num_rows_without_sku += 1
             continue
@@ -108,7 +123,7 @@ def _get_csv_sku_to_codes(reader, row_length: int) -> dict[str, Codes] | None:
                 return None
 
     if num_rows_without_sku > 0:
-        logging.warning("%d rows do not have an SKU", num_rows_without_sku)
+        logging.warning("%d rows do not have an SKU in the CSV", num_rows_without_sku)
     return sku_to_codes
 
 
@@ -121,18 +136,22 @@ def _get_shopify_sku_to_items() -> dict[str, list[tuple[str, Codes]]] | None:
 
 def _create_id_to_codes(csv_sku_to_codes: dict[str, Codes],
                         shopify_sku_to_items: dict[str, list[tuple[str, Codes]]]
-                        ) -> dict[str, Codes]:
+                        ) -> tuple[dict[str, Codes], list[str]]:
     """Create a dictionary from inventory item id to codes to upload"""
     id_to_codes: dict[str, Codes] = {}
+    skipped_skus = []
     for (sku, csv_codes) in csv_sku_to_codes.items():
         if sku not in shopify_sku_to_items:
             logging.warning("SKU %s in CSV but not Shopify - cannot upload", sku)
+            skipped_skus.append(sku)
         else:
             for (shopify_id, shopify_codes) in shopify_sku_to_items[sku]:
                 if csv_codes != shopify_codes:
                     id_to_codes[shopify_id] = csv_codes
 
-    return id_to_codes
+    if not id_to_codes and len(skipped_skus) == 0:
+        logging.info("Shopify already synced with CSV - nothing to upload")
+    return id_to_codes, skipped_skus
 
 
 def _upload_codes_to_shopify(id_to_codes: dict[str, Codes]) -> bool:
