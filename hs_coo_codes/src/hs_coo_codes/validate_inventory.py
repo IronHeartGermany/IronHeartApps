@@ -13,10 +13,6 @@ import click
 
 from . import csv_utilities
 
-logging.basicConfig(
-    level=logging.INFO,
-)
-
 @click.command()
 @click.option('--input-file', required=True, type=click.Path(exists=True), help="Input CSV file.")
 @click.option('--check-hs', is_flag=True, help="Check for existence of HS Code in CSV.")
@@ -24,6 +20,8 @@ logging.basicConfig(
 @click.option('--check-us-hts', is_flag=True, help="Check for existence of US HTS Code in CSV.")
 def cli(input_file, check_hs, check_coo, check_us_hts):
     """Main function"""
+
+    logging.basicConfig(level=logging.INFO)
 
     if validate_inventory(input_file, check_hs, check_coo, check_us_hts):
         logging.info("Validation successful")
@@ -60,8 +58,9 @@ def validate_inventory(input_file: str,
 
             # Validate rows after header
             for index, row in enumerate(reader, start=2):
-                if not csv_utilities.validate_row(index, len(header), row, check_hs, check_coo, check_us_hts):
-                    logging.error("Row validation failed")
+                if not csv_utilities.validate_row(index, len(header), row, check_hs,
+                                                  check_coo, check_us_hts):
+                    logging.error("Row validation failed for row %s", index)
                     return False
 
     except FileNotFoundError as e:

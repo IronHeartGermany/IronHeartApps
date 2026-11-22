@@ -14,10 +14,6 @@ import click
 from .columns import InventoryColumns
 from . import csv_utilities
 
-logging.basicConfig(
-    level=logging.INFO,
-)
-
 @click.command()
 @click.option('--input-file-1',
               required=True,
@@ -29,6 +25,8 @@ logging.basicConfig(
               help="Second Input CSV file.")
 def cli(input_file_1, input_file_2):
     """Main function"""
+
+    logging.basicConfig(level=logging.INFO)
 
     if compare_inventory(input_file_1, input_file_2):
         logging.info("Compare successful")

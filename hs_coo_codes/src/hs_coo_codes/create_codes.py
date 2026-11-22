@@ -16,23 +16,35 @@ import tempfile
 
 import click
 
-from .validate_inventory import validate_inventory
 from .compare_inventory import compare_inventory
+from .upload_to_shopify import upload_to_shopify
+from .validate_inventory import validate_inventory
+
 from . import csv_utilities
 
 @click.command()
 @click.option('--input-file', required=True, type=click.Path(exists=True), help="Input CSV file.")
 @click.option('--output-file', required=True, help="Output CSV file.")
-def cli(input_file, output_file):
+@click.option('--upload', is_flag=True, help="Upload COO and HS Codes via Shopify API")
+def cli(input_file, output_file, upload):
     """Main function"""
 
-    if create_codes(input_file, output_file):
-        logging.info("Code creation successful")
-    else:
+    logging.basicConfig(level=logging.INFO)
+
+    if not create_codes(input_file, output_file):
         logging.critical("Code creation failed")
         sys.exit(1)
 
-def create_codes(input_file, output_file) -> bool:
+    logging.info("Code creation successful")
+
+    if upload:
+        if not upload_to_shopify(output_file):
+            logging.critical("Upload to Shopify failed")
+            sys.exit(1)
+        logging.info("Upload to Shopify successful")
+
+
+def create_codes(input_file: str, output_file: str) -> bool:
     """Create HS and COO codes based upon info in input CSV"""
     # Reject identical paths
     if Path(input_file).resolve() == Path(output_file).resolve():
