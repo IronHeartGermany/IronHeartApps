@@ -12,6 +12,8 @@ from .coo_codes import (COOCodes,
                         COO_CODES_SINGAPORE,
                         COO_CODES_USA)
 
+from .hs_codes import HSCodes
+
 from .columns import header_map, InventoryColumns, Field
 
 from .hs_codes_for_ih import get_hs_code_for_ih
@@ -99,8 +101,7 @@ def create_row_with_codes(row_number: int, row: list[str]) -> list[str] | None:
 
     if not sku:
         # Handle products without an SKU
-        us_hts_code = "BBB"
-        hs_code = "AAA"
+        us_hts_code = get_hs_from_title(title)
 
         coo_code = get_coo_from_sku(title.split("-", 1)[0], False)
         if coo_code is None:
@@ -108,8 +109,9 @@ def create_row_with_codes(row_number: int, row: list[str]) -> list[str] | None:
     else:
         # Handle products with an SKU
         us_hts_code = get_hs_from_sku_and_title(sku, title)
-        hs_code = us_hts_code[:6] if len(us_hts_code) >= 6 else us_hts_code
         coo_code = get_coo_from_sku(sku.split("-", 1)[0])
+
+    hs_code = us_hts_code[:6] if len(us_hts_code) >= 6 else us_hts_code
 
     if hs_code is None:
         logging.error("Generated HS Code of None for row %d", row_number)
@@ -135,6 +137,7 @@ def create_row_with_codes(row_number: int, row: list[str]) -> list[str] | None:
 
     return new_row
 
+
 def get_coo_from_sku(sku_start: str, log: bool=True) -> str | None:
     """Get the COO from the SKU"""
     if sku_start in COO_CODES_CHINA:
@@ -155,6 +158,7 @@ def get_coo_from_sku(sku_start: str, log: bool=True) -> str | None:
         coo = None
     return coo
 
+
 def get_coo_from_title(title: str) -> str | None:
     """Get the COO from the Title"""
     title_start = title.lower().split(" ", 1)[0].strip()
@@ -165,6 +169,35 @@ def get_coo_from_title(title: str) -> str | None:
 
     logging.error("Could not map title '%s' to COO", title)
     return None
+
+
+def get_hs_from_title(title: str) -> None | str:
+    """Get the US HTS Codes from the Title"""
+    if all(word in title for word in ("rats", "t-shirt")):
+        return HSCodes.COTTON_T_SHIRT
+    if all(word in title for word in ("trophy", "tee")):
+        return HSCodes.COTTON_KNITTED_PULLOVER
+    if all(word in title for word in ("trophy", "flannel")):
+        return HSCodes.COTTON_SHIRT_FLANNEL
+    if all(word in title for word in ("trophy", "coke stripe pants")):
+        return HSCodes.COTTON_TROUSERS
+    if all(word in title for word in ("trophy", "coverall")):
+        return HSCodes.COTTON_JACKET_BLUE_DENIM
+    if all(word in title for word in ("trophy", "watchman cap")):
+        return HSCodes.COTTON_HAT_KNITTED
+    if all(word in title for word in ("trophy", "jeans")):
+        return HSCodes.JEANS_BLUE_DENIM
+    if all(word in title for word in ("trophy", "civilian trousers")):
+        return HSCodes.COTTON_TROUSERS
+    if all(word in title for word in ("peanuts", "ring", "silver")):
+        return HSCodes.SILVER_JEWELRY
+    if all(word in title for word in ("hollywood trading", "belt")):
+        return HSCodes.LEATHER_BELT
+    if all(word in title for word in ("duck", "jacket")):
+        return HSCodes.COTTON_JACKET_OTHER
+
+    return None
+
 
 def get_hs_from_sku_and_title(sku: str, title: str) -> None | str:
     """Get the US HTS Codes from the SKU and Title"""
@@ -178,6 +211,4 @@ def get_hs_from_sku_and_title(sku: str, title: str) -> None | str:
     if hs_code is not None:
         return hs_code
 
-    return "XXX" # TODO: update
-
-
+    return None
