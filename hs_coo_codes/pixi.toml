@@ -16,6 +16,7 @@ compare-inventory = "python -m hs_coo_codes.compare_inventory"
 python = "3.12.*"
 click = ">=8.5.0,<9"
 pytest = ">=8,<10"
+requests = ">=2.34.2,<3"
 
 [pypi-dependencies]
 hs-coo-codes = { path = ".", editable = true }
