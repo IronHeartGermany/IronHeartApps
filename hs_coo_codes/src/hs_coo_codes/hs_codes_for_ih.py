@@ -163,7 +163,7 @@ def _get_hs_ih_jackets(sku: str, title: str) -> None | str:
                                           "chino", "duck", "hickory", "kersey",
                                           "canvas", "twill", "piqué", "paraffin",
                                           "oiled cotton", "reversible tanker",
-                                          "serge", "ox riders")):
+                                          "serge", "ox riders", "drizzler")):
             return HSCodes.COTTON_JACKET_OTHER
         if "corduroy" in title:
             return HSCodes.COTTON_JACKET_CORDUROY
@@ -227,6 +227,8 @@ def _get_hs_ih_shirts(sku: str, title: str) -> None | str:
             return HSCodes.COTTON_SHIRT_DENIM
         if any(word in title for word in ("madras", "double cloth", "ihsh-308-ind",
                                           "hickory", "wabash")):
+            return HSCodes.COTTON_SHIRT_MULTI_COLOR
+        if all(word in title for word in ("pique", "indigo")):
             return HSCodes.COTTON_SHIRT_MULTI_COLOR
         if any(word in title for word in ("serge", "kersey", "whipcord",
                                           "satin", "dobby", "waffle", "fatigue", "twill",
@@ -317,7 +319,7 @@ def _get_hs_ih_thermals(sku: str, title: str) -> None | str:
 def _get_hs_ih_vests(sku: str, title: str) -> None | str:
     """Get the US HTS Codes for IH Vests"""
     if sku.startswith(StartSKU.IH_VESTS + "-"):
-        if any(word in title for word in ("dobby", "duck", "hickory", "whipcord")):
+        if any(word in title for word in ("dobby", "duck", "hickory", "whipcord", "superblack", "denim")):
             return HSCodes.COTTON_VEST
         if "steerhide" in title:
             return HSCodes.LEATHER_SHIRT

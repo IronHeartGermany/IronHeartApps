@@ -112,18 +112,25 @@ def create_row_with_codes(row_number: int, row: list[str]) -> list[str] | None:
         coo_code = get_coo_from_sku(sku.split("-", 1)[0])
 
     if coo_code is None:
-        logging.error("Generated COO Code of None for row %d (sku=%s, title=%s)", row_number, sku, title)
+        logging.error("Generated COO Code of None for row %d (sku=%s, title=%s)",
+                      row_number, sku, title)
         return None
 
     if us_hts_code is None:
-        logging.error("Generated US HTS Code of None for row %d (sku=%s, title=%s)", row_number, sku, title)
+        logging.error("Generated US HTS Code of None for row %d (sku=%s, title=%s)",
+                      row_number, sku, title)
         return None
     hs_code = us_hts_code[:6] if len(us_hts_code) >= 6 else us_hts_code
 
-    # Check if existing COO code does not match current COO code
+    # Check if existing codes do not match current codes
     if row[InventoryColumns.COO] and coo_code != row[InventoryColumns.COO]:
         logging.warning("COO code %s does not match existing code %s in row %d (SKU=%s)",
-                        coo_code, row[InventoryColumns.COO], row_number, row[InventoryColumns.SKU])
+                        coo_code, row[InventoryColumns.COO], row_number,
+                        row[InventoryColumns.SKU])
+    if row[InventoryColumns.HS_CODE] and hs_code != row[InventoryColumns.HS_CODE]:
+        logging.warning("HS_CODE %s does not match existing code %s in row %d (SKU=%s)",
+                        hs_code, row[InventoryColumns.HS_CODE], row_number,
+                        row[InventoryColumns.SKU])
 
     new_row[InventoryColumns.HS_CODE] = hs_code
     new_row[InventoryColumns.COO] = coo_code
@@ -159,7 +166,7 @@ def get_coo_from_sku(sku_start: str, log: bool=True) -> str | None:
 def get_coo_from_title(title: str) -> str | None:
     """Get the COO from the Title"""
     title_start = title.lower().split(" ", 1)[0].strip()
-    if title_start in ("rats", "trophy", "ih-xxx-dd") or "pe-skull" in title:
+    if title_start in ("rats", "trophy", "ih-xxx-dd", "ihsh-xxx-ind") or "pe-skull" in title:
         return COOCodes.JAPAN
     if "htc-eagle" in title:
         return COOCodes.USA
@@ -192,6 +199,8 @@ def get_hs_from_title(title: str) -> None | str:
         return HSCodes.LEATHER_BELT
     if all(word in title for word in ("ih-xxx-dd", "duck", "jacket")):
         return HSCodes.COTTON_JACKET_OTHER
+    if all(word in title for word in ("ihsh-xxx-ind", "denim", "cpo")):
+        return HSCodes.COTTON_SHIRT_DENIM
 
     logging.error("Could not map title '%s' to HS Code", title)
     return None
