@@ -449,4 +449,5 @@ packages:
   name: hs-coo-codes
   requires_dist:
   - click>=8.5.0,<9
+  - requests>=2.32,<3
   requires_python: '>=3.12'
